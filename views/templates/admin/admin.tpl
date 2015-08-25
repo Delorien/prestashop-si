@@ -1,6 +1,6 @@
 <div class="bcash" id="bcash">
 
-	<img src="https://devwww.bcash.com.br/webroot/img/banking/logo.png">
+	<img src="https://www.bcash.com.br/webroot/img/banking/logo.png">
 
 	<form class="b-form b-form-horizontal" id="adminform" action="{$action_post|escape:'none'}" method="POST">
 

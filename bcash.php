@@ -29,7 +29,10 @@ class bcash extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() || !$this->registerHook('payment') || !$this->registerHook('paymentReturn')) { 
+		if (!parent::install() || 
+			!$this->registerHook('payment') || 
+			!$this->registerHook('paymentReturn')) {
+
 			return false;
 		}
 
@@ -117,4 +120,22 @@ class bcash extends PaymentModule
 
 		return $this->display(__FILE__, 'views/templates/admin/admin.tpl');	   
   	}
+
+	public function hookPayment($params)
+    {
+        if (!$this->active) {
+            return;
+        }
+
+		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_payment.css', 'all');
+		$this->context->smarty->assign(
+			array(
+      			'my_module_name' => Configuration::get('MYMODULE_NAME'),
+      			'module_dir' => _PS_MODULE_DIR_.$this->name.'/'
+      		)
+  		);
+
+        return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
+    }
+
 }

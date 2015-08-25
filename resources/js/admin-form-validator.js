@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	jQuery.validator.addMethod("tokenDifereConsumerKey", function(value, element) {
-		return $("input[name=consumer_key]").val() != $("input[name=token]").val();
+		return $("input[name=consumer_key]").val() != $("input[name=bcash_token]").val();
 	}, "Consumer key e Token não podem ser iguais.");
 
 	jQuery.validator.addMethod("isPercentValid", function(value, element) {
@@ -21,7 +21,7 @@ $(document).ready(function() {
 				required : true,
 				tokenDifereConsumerKey : true
 			},
-			token : {
+			bcash_token : {
 				required : true,
 				tokenDifereConsumerKey : true
 			},
@@ -43,13 +43,13 @@ $(document).ready(function() {
 			consumer_key : {
 				required : "Campo consumer key é obrigatório",
 			},
-			token : {
+			bcash_token : {
 				required : "Campo token é obrigatório",
 			}
 		}
 	});
-	
-	
+
+
 	function mvalor(v){
 	    v=v.replace(/\D/g,"");//Remove tudo o que não é dígito
 	    v=v.replace(/^(\d{1})(\d{1})(\d{1})(\d)$/,"$1$2$3");//coloca a virgula antes dos 2 últimos dígitos
@@ -74,6 +74,13 @@ $(document).ready(function() {
 				$('input[name=desconto_credito]').val(mvalor($('input[name=desconto_credito]').val()));
 			},1);
 	});
-	
-	
+
+	$('input[name=sandbox]').change(function(){
+	     if($(this).attr('checked')){
+	          $(this).val('TRUE');
+	     }else{
+	          $(this).val('FALSE');
+	     }
+	});
+
 });

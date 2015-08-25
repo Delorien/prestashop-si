@@ -1,0 +1,70 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+#bcash {
+  width: 70%;
+  margin: 20px 0;
+}
+#bcash h2 {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 28px;
+  margin: 0 0 20px;
+}
+#bcash h4 {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  margin: 25px 0 0 0;
+  color: #3e3e3e;
+}
+#bcash form {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}
+#bcash form label {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}
+#bcash form input[type="text"],
+#bcash form select,
+#bcash form textarea {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  padding: 5px;
+  width: 100%;
+}
+#bcash .b-form-horizontal .b-form-group {
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+#bcash .b-form-horizontal label {
+  margin-bottom: 5px;
+  display: block;
+}
+#bcash .b-form-horizontal input {
+  display: inline;
+}
+#bcash .b-form-horizontal span {
+  font-size: 18px;
+}
+#bcash input.b-button {
+  border: 0;
+  padding: 8px 15px;
+  border-radius: 2px;
+  min-width: 90px;
+}
+#bcash input.b-button-primary {
+  background-color: #E42A21;
+  color: #fff;
+}
+#bcash input.b-button-primary:hover {
+  background-color: #bb1e17;
+}
+
+#bcash img {
+	margin-bottom: 20px;
+}
+.error {
+  color: #E42A21;
+  font-size: 15px;
+}

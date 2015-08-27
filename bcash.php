@@ -130,12 +130,12 @@ class bcash extends PaymentModule
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_payment.css', 'all');
 		$this->context->smarty->assign(
 			array(
-      			'my_module_name' => Configuration::get('MYMODULE_NAME'),
-      			'module_dir' => _PS_MODULE_DIR_.$this->name.'/'
+				// $this->context->link->getModuleLink('module_folder_name','controller_name',array_of_params);
+      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment')
       		)
   		);
 
-        return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
+        return $this->display(__FILE__, 'views/templates/hook/payment_option.tpl');
     }
 
 }

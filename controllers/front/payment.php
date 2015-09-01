@@ -21,7 +21,9 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	        array(
 	            'cards' => $cards,
 	            'tefs' => $tefs,
-	            'bankSlips' => $bankSlips
+	            'bankSlips' => $bankSlips,
+	            'mesesVencimento' => $this->getMonths(),
+	            'anosVencimento' => $this->getYears()
 	        )
 	    );
 
@@ -38,5 +40,19 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
         $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'bcash/resources/css/bcash_payment.css', 'all');
         $this->context->controller->addJS(_PS_MODULE_DIR_ . 'bcash/resources/js/bcash_payment.js');
     }
+
+	private function getMonths() {
+		return array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+	}
+
+	private function getYears() {
+		$years = array();
+
+		for($x = date("Y"); $x <= date("Y") + 11; $x++) {
+			array_push($years, '' . $x);
+		}
+
+		return $years;
+	}
 
 }

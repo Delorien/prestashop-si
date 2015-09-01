@@ -1,10 +1,15 @@
 <?php
 
-// require_once ( $_SERVER['DOCUMENT_ROOT'] . _MODULE_DIR_ . 'bcash/helper/PaymentMethodHelper.php');
+include dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
 include dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
+
+use Bcash\Service\Installments;
+use Bcash\Exception\ValidationException;
+use Bcash\Exception\ConnectionException;
 
 class BcashPaymentModuleFrontController extends ModuleFrontController
 {
+	const prefix = 'BCASH_';
 
 	public $display_column_left = false;
 
@@ -17,11 +22,24 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		$tefs = $paymentMethodHelper->getPaymentMethods()['ONLINE_TRANSFER'];
 		$bankSlips = $paymentMethodHelper->getPaymentMethods()['BANKSLIP'];
 
+		$installments = $this->getInstallments();
+		$cardsInstallments = $this->getCardInstallments($installments->paymentTypes);
+		$TEFsInstallments = $this->getTEFSInstallments($installments->paymentTypes);
+		$bankSlipsInstallments = $this->getBankSlipInstallments($installments->paymentTypes);
+
+
 		$this->context->smarty->assign(
 	        array(
 	            'cards' => $cards,
+	            'cardsInstallments' => $cardsInstallments,
+	            'cardsAmount' => $cardsInstallments[0]->installments[0]->amount,
+
 	            'tefs' => $tefs,
+	            'tefsAmount' => $TEFsInstallments[0]->installments[0]->amount,
+
 	            'bankSlips' => $bankSlips,
+	            'bankSlipsAmount' => $bankSlipsInstallments[0]->installments[0]->amount,
+
 	            'mesesVencimento' => $this->getMonths(),
 	            'anosVencimento' => $this->getYears()
 	        )
@@ -53,6 +71,63 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		}
 
 		return $years;
+	}
+
+	private function getInstallments () {
+		$email = Configuration::get(self::prefix . 'EMAIL');
+		$token =  Configuration::get(self::prefix . 'TOKEN');
+
+		$amount = $this->context->cart->getOrderTotal(true, Cart::BOTH);
+
+		$installments = new Installments($email, $token);
+		$installments->enableSandBox(true);
+
+		$response = null;
+
+		try {
+ 			$response = $installments->calculate($amount);
+
+		} catch (ValidationException $e) {
+		    echo "ErroTeste: " . $e->getMessage() . "\n";
+		    echo "<pre>";
+		    var_dump($e->getErrors());die;
+		    echo "</pre>";
+
+		} catch (ConnectionException $e) {
+		    echo "ErroTeste: " . $e->getMessage() . "\n";
+		    echo "<pre>";
+		    var_dump($e->getErrors());die;
+		    echo "</pre>";
+		}
+
+		return $response;
+	}
+
+	private function getCardInstallments($installments)
+	{
+		foreach ($installments as $key => $value) {
+			if($value->name == "card"){
+				return $value->paymentMethods;
+			}
+		}
+	}
+	
+	private function getTEFSInstallments($installments)
+	{
+		foreach ($installments as $key => $value) {
+			if($value->name == "transferencia"){
+				return $value->paymentMethods;
+			}
+		}
+	}
+	
+	private function getBankSlipInstallments($installments)
+	{
+		foreach ($installments as $key => $value) {
+			if($value->name == "boleto"){
+				return $value->paymentMethods;
+			}
+		}
 	}
 
 }

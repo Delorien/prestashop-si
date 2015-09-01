@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-	$('#bcash input[type=radio]').each(function() {
+	$('#bcash .bandeira input[type=radio]').each(function() {
 
 		var radio = $('input[type=radio][id=' + this.id + ']');
 
@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 			radio.parent().addClass("checked");
 
-			showCardForm(this.id);
+			showCardForm(this);
 		});
 	});
 
@@ -21,11 +21,27 @@ $(document).ready(function() {
 		});
 	};
 
-	function showCardForm(id) {
-		if ($('#' + id, '#credit_list').length == 1) {
+	function showCardForm(radio) {
+		if ($('#' + radio.id, '#credit_list').length == 1) {
+
 			$('#card-data').show('slow');
+
+			$('.card-installments').hide('fast');
+			$('#card-installment-' + radio.value).show('fast');
+
+			$('.b-button-sucess').hide('fast');
+			$('#b-button-sucess-credit').show('fast');
+
 		} else {
 			$('#card-data').hide('slow');
+
+			if ($('#' + radio.id, '#tef_list').length == 1) {
+				$('.b-button-sucess').hide('fast');
+				$('#b-button-sucess-tef').show('fast');
+			}else {
+				$('.b-button-sucess').hide('fast');
+				$('#b-button-sucess-bankslip').show('fast');
+			}
 		}
 	};
 
@@ -36,38 +52,4 @@ $(window).load(function() {
 	if ($.isFunction($.uniform.restore)) {
 		$.uniform.restore(".noUniform");
 	}
-});
-
-
-
-
-
-
-// (function () {
-// var cards = [ '1', '2', '37', '45', '55', '56', '63'];
-//
-// function clickFlag(e) {
-// cardConteiner = document.getElementById('card-conteiner');
-// if (isCard(this) && hasClass(cardConteiner, 'b-hide')) {
-// cardConteiner.className = cardConteiner.className.replace(/\bb-hide\b/,'');
-// } else if (!isCard(this) && !hasClass(cardConteiner, 'b-hide')) {
-// cardConteiner.className = cardConteiner.className + " b-hide";
-// }
-// }
-//
-// function isCard(element) {
-// return cards.indexOf(element.value) > -1;
-// }
-//
-// function hasClass(element, cls) {
-// return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-// }
-//
-// window.onload = function() {
-// var payments = document.getElementsByName("payment-method");
-// for (var i = payments.length - 1; i >= 0; i--) {
-// var payment = payments[i];
-// payment.onclick = clickFlag;
-// };
-// }
-// })();
+}); 

@@ -23,6 +23,33 @@
 
 			<!-- card form -->
 			<div id="card-data" class="b-form-horizontal" style="display:none;">
+				<h4>Parcelamentos</h4>
+				{foreach from=$cardsInstallments item=cardInstallments}					
+				<div class="card-installments" id="card-installment-{$cardInstallments->id}" style="display:none;">
+
+					<div class="coluna-com-6">
+					{foreach from=$cardInstallments->installments item=installment}
+
+						<label class="installment-option" for="card-installment-{$cardInstallments->id}-{$installment->number}">
+							<input id="card-installment-{$cardInstallments->id}-{$installment->number}" name="card-installment" class="noUniform" type="radio" value="{$installment->number}"/>
+						 	<span>
+						 		<span>{$installment->number}X </span>R$ {$installment->amount}
+						 	</span>
+						</label>
+
+						{if $installment@iteration is div by 6}
+							</div>
+							<div class="coluna-com-6">
+						{/if}
+
+
+					{/foreach}
+					</div>
+
+				</div>
+				{/foreach}
+
+				<h4>Dados do Cartão</h4>
 				<div class="b-form-group">
 					<label>Número do cartão</label>
 					<input type="text" />
@@ -59,13 +86,18 @@
 			</div>
 			<!-- card form -->
 
+			<div class="b-amount">
+				R$ {$cardsAmount}
+			</div>
+
+			<input id="b-button-sucess-credit" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
 		</div>
 
 
 		<div class="forma-pagamento">
 			<h4>Transferência Bancária</h4>
 
-			<ul id="credit_list">
+			<ul id="tef_list">
 				{foreach from=$tefs item=tef}
 				<li>
 
@@ -76,12 +108,18 @@
 				</li>
 				{/foreach}
 			</ul>
+
+			<div class="b-amount">
+				R$ {$tefsAmount}
+			</div>
+
+			<input id="b-button-sucess-tef" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
 		</div>
 
 		<div class="forma-pagamento">
 			<h4>Boleto Bancário</h4>
 
-			<ul id="credit_list">
+			<ul id="bankslip_list">
 				{foreach from=$bankSlips item=bankSlip}
 				<li>
 
@@ -92,6 +130,13 @@
 				</li>
 				{/foreach}
 			</ul>
+
+			<div class="b-amount">
+				R$ {$bankSlipsAmount}
+			</div>
+
+			<input id="b-button-sucess-bankslip" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
 		</div>
+
 	</form>
 </div>

@@ -1,6 +1,235 @@
-#bcash-logo {
-	background-image : url('https://www.bcash.com.br/webroot/img/banking/logo.png');
-	background-size: 60px 80px;
-	background-position: 10px 3px;
-	background-repeat: no-repeat;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+#bcash .forma-pagamento {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000000;
+  	padding: 8px 15px;
+  	border-radius: 3px;
+	margin-bottom: 15px;
+}
+
+#bcash .forma-pagamento ul {
+  list-style: none;
+  padding-left: 0px;
+  margin-left: -5px;
+}
+
+#bcash .forma-pagamento li {
+  display: inline-block;
+  height: 42px;
+  padding: 10px 5px;
+}
+
+#bcash .forma-pagamento input[type='radio'] {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: -1 !important;
+  float: left !important;
+  clear: both !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  width: 0px !important;
+  height: 0px !important;
+  opacity: 0;
+}
+
+.bandeira {
+    display: inline-block;
+    background: url(../images/application-sprite.png) no-repeat;
+    width: 70px;
+    height: 46px;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+
+/* visa */
+#bcash .band-1 {
+  background-position: 0 -177px
+}
+
+#bcash .band-1:hover {
+  border: none;
+  background-position: -74px -177px
+}
+
+#bcash .forma-pagamento .band-1.checked {
+  background-position: -150px -177px;
+}
+
+#bcash .forma-pagamento .band-1.checked {
+  background-position: -150px -177px;
+}
+
+/* master */
+.band-2 {
+  background-position: 0 -226px
+}
+
+.band-2:hover {
+  border: none;
+  background-position: -74px -226px
+}
+
+#bcash .forma-pagamento .band-2.checked  {
+  background-position: -150px -226px;
+}
+
+/* amex */
+.band-37 {
+  background-position: 0 -274px
+}
+
+.band-37:hover {
+  border: none;
+  background-position: -74px -274px
+}
+
+#bcash .forma-pagamento .band-37.checked {
+  background-position: -150px -274px
+}
+
+/* aura */
+.band-45 {
+  background-position: 0 -323px
+}
+
+.band-45:hover {
+  border: none;
+  background-position: -74px -323px
+}
+
+#bcash .forma-pagamento .band-45.checked {
+  background-position: -150px -323px
+}
+
+/* diners */
+.band-55 {
+  background-position: 0 -371px
+}
+
+.band-55:hover {
+  border: none;
+  background-position: -74px -371px
+}
+
+#bcash .forma-pagamento .band-55.checked {
+  background-position: -150px -371px
+}
+
+/* hiper */
+.band-56 {
+  background-position: 0 -420px
+}
+
+.band-56:hover {
+  border: none;
+  background-position: -74px -420px
+}
+
+#bcash .forma-pagamento .band-56.checked {
+  background-position: -150px -420px
+}
+
+/* elo */
+.band-63 {
+  background-position: 0 -468px
+}
+
+.band-63:hover {
+  border: none;
+  background-position: -74px -468px
+}
+
+#bcash .forma-pagamento .band-63.checked {
+  background-position: -150px -468px
+}
+
+/* boleto */
+.band-10 {
+  background-position: 0 -517px
+}
+
+.band-10:hover {
+  border: none;
+  background-position: -74px -517px
+}
+
+#bcash .forma-pagamento .band-10.checked {
+  background-position: -150px -517px
+}
+
+/* bb */
+.band-58 {
+  background-position: 0 -565px
+}
+
+.band-58:hover {
+  border: none;
+  background-position: -74px -565px
+}
+
+#bcash .forma-pagamento .band-58.checked {
+  background-position: -150px -565px
+}
+
+/* bradesco */
+.band-59 {
+  background-position: 0 -614px
+}
+
+.band-59:hover {
+  border: none;
+  background-position: -74px -614px
+}
+
+#bcash .forma-pagamento .band-59.checked {
+  background-position: -150px -614px
+}
+
+/* itau */
+.band-60 {
+  background-position: 0 -662px
+}
+
+.band-60:hover {
+  border: none;
+  background-position: -74px -662px
+}
+
+#bcash .forma-pagamento .band-60.checked {
+  background-position: -150px -662px
+}
+
+/* hsbc */
+.band-62 {
+  background-position: 0 -759px
+}
+
+.band-62:hover {
+  border: none;
+  background-position: -74px -759px
+}
+
+#bcash .forma-pagamento .band-62.checked {
+  background-position: -150px -759px
+}
+
+/* banrisul*/
+.band-61 {
+  background-position: 0 -711px
+}
+
+.band-61:hover {
+  border: none;
+  background-position: -74px -711px
+}
+
+#bcash .forma-pagamento .band-61.checked {
+  background-position: -150px -711px
 }

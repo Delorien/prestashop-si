@@ -11,6 +11,7 @@ class Config
 	const host = "https://api.bcash.com.br/service";
 	const hostSandBox = "https://sandbox-api.bcash.com.br/service";
 
+
 	const siteHost = "https://www.bcash.com.br";
 	const siteHostSandBox = "https://sandbox.bcash.com.br";
 

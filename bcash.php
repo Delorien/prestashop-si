@@ -1,12 +1,15 @@
-<?php   
+<?php
 
 if (! defined('_PS_VERSION_')) {
     exit();
 }
 
+include_once dirname(__FILE__).'/helper/BcashStatusHelper.php';
+
 class bcash extends PaymentModule
 {
 	const prefix = 'BCASH_';
+	const IN_PROGRESS = 1;
 
 	public function __construct() 
 	{
@@ -36,7 +39,11 @@ class bcash extends PaymentModule
 			return false;
 		}
 
-		Configuration::updateValue(self::prefix . 'TITULO', 'Bcash'); 
+		 if (! $this->generateBcashOrderStatus()) {
+            return false;
+        }
+
+		Configuration::updateValue(self::prefix . 'TITULO', 'Bcash');
 
 		return true;
 	}
@@ -66,6 +73,8 @@ class bcash extends PaymentModule
 			$desconto_boleto = strval(Tools::getValue('desconto_boleto'));
 			$desconto_tef = strval(Tools::getValue('desconto_tef'));
 			$desconto_credito = strval(Tools::getValue('desconto_credito'));
+			$campo_cpf = strval(Tools::getValue('campo_cpf'));
+			$campo_fone = strval(Tools::getValue('campo_fone'));
 			$sandbox = strval(Tools::getValue('sandbox'));
 
 	    	if (!empty($titulo)) {
@@ -84,6 +93,8 @@ class bcash extends PaymentModule
        	    Configuration::updateValue(self::prefix . 'DESCONTO_BOLETO', $desconto_boleto);
        	    Configuration::updateValue(self::prefix . 'DESCONTO_TEF', $desconto_tef);
        	    Configuration::updateValue(self::prefix . 'DESCONTO_CREDITO', $desconto_credito);
+       	    Configuration::updateValue(self::prefix . 'CAMPO_CPF', $campo_cpf);
+			Configuration::updateValue(self::prefix . 'CAMPO_FONE', $campo_fone);
 
 			if (!empty($sandbox)) {
         	    Configuration::updateValue(self::prefix . 'SANDBOX', 1);
@@ -114,7 +125,11 @@ class bcash extends PaymentModule
 				'desconto_boleto' => Configuration::get(self::prefix.'DESCONTO_BOLETO'),
 				'desconto_tef' => Configuration::get(self::prefix.'DESCONTO_TEF'),
 				'desconto_credito' => Configuration::get(self::prefix.'DESCONTO_CREDITO'),
-				'sandbox' => Configuration::get(self::prefix.'SANDBOX')
+				'sandbox' => Configuration::get(self::prefix.'SANDBOX'),
+				'campo_cpf' => Configuration::get(self::prefix.'CAMPO_CPF'),
+				'campos_customer' => array_keys(get_object_vars(new Customer())),
+				'campo_fone' => Configuration::get(self::prefix.'CAMPO_FONE'),
+				'campos_fone' => array_keys(get_object_vars(new Customer()))
 	        )
 	    );
 
@@ -138,4 +153,53 @@ class bcash extends PaymentModule
         return $this->display(__FILE__, 'views/templates/hook/payment_option.tpl');
     }
 
+	private function generateBcashOrderStatus() {
+/*		$image = _PS_ROOT_DIR_ . '/modules/bcash/logo.gif';
+
+		foreach (BcashStateHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
+
+			$order_state = new OrderState();
+            $order_state->module_name = 'bcash';
+            $order_state->send_email = $statusBcash['send_email'];
+            $order_state->color = '#00FF99';
+            $order_state->hidden = $statusBcash['hidden'];
+            $order_state->delivery = $statusBcash['delivery'];
+            $order_state->logable = $statusBcash['logable'];
+            $order_state->invoice = $statusBcash['invoice'];
+			$order_state->unremovable = $statusBcash['unremovable'];
+			$order_state->shipped = $statusBcash['shipped'];
+			$order_state->paid = $statusBcash['paid'];
+			$order_state->name = $statusBcash['name'];
+
+	        if ($order_state->add()) {//save new order status
+
+                // $file = _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state->id . '.gif';
+                // copy($image, $file);
+
+				Configuration::updateValue('PS_OS_BCASH', (int)$order_state->id);
+	        }
+		}
+ * 
+ */
+	}//generateBcashOrderStatus
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

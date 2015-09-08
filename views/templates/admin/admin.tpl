@@ -44,6 +44,35 @@
 			<span><strong>%</strong></span>
 		</div>
 
+		<h4>Consumidor</h4>
+		<div class="b-form-group">
+			<label>CPF</label>
+			<select style="height: 35px" name="campo_cpf" id="campo_cpf">
+				<option value="" selected="selected">Exibir campo no checkout para preenchimento</option>
+				{foreach from=$campos_customer item=campo}
+					{if $campo == $campo_cpf}
+						<option value="{$campo}" selected="selected" >Usar campo <span>{$campo}</span> da tabela Customer como CPF</option>
+					{else}
+						<option value="{$campo}">Usar campo <span>{$campo}</span> da tabela Customer como CPF</option>
+					{/if}
+				{/foreach}
+			</select>
+		</div>
+
+		<div class="b-form-group">
+			<label>Telefone</label>
+			<select style="height: 35px" name="campo_fone" id="campo_fone">
+				<option value="" selected="selected">Exibir campo no checkout para preenchimento</option>
+				{foreach from=$campos_fone item=campo_f}
+					{if $campo_f == $campo_fone}
+						<option value="{$campo_f}" selected="selected" >Usar campo <span>{$campo_f}</span> da tabela Customer como CPF</option>
+					{else}
+						<option value="{$campo_f}">Usar campo <span>{$campo_f}</span> da tabela Customer como CPF</option>
+					{/if}
+				{/foreach}
+			</select>
+		</div>
+
 		<div class="b-form-group">
 			<label for="sandbox">
 				{if $sandbox == 1}

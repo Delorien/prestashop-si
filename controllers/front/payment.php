@@ -13,6 +13,9 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 
 	public $display_column_left = false;
 
+	/**
+	 * @see FrontController::initContent()
+	 */
 	public function initContent()
   	{
 	   	parent::initContent();
@@ -41,12 +44,16 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	            'bankSlipsAmount' => $bankSlipsInstallments[0]->installments[0]->amount,
 
 	            'mesesVencimento' => $this->getMonths(),
-	            'anosVencimento' => $this->getYears()
+	            'anosVencimento' => $this->getYears(),
+
+				'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
+				'campo_fone' => Configuration::get(self::prefix . 'CAMPO_FONE'),
+
+				'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
 	        )
 	    );
 
     	$this->setTemplate('payment.tpl');
-
   	}
 
 	/**

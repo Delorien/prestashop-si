@@ -1,0 +1,113 @@
+<?php
+
+
+class BcashStateHelper
+{
+	private static $order_status = array(
+        'IN_PROGRESS' => 'Em andamento',
+        'APPROVED' => 'Aprovado',
+		'COMPLETED' => 'Completada',
+    	'IN_DISPUTE' => 'Em disputa',
+    	'REFUNDED' => 'Devolvida',
+    	'CANCELLED' => 'Cancelada',
+    	'CHARGEBACK' => 'Chargeback'
+    );
+
+ 	private static $order_status_bcash = array(
+        'IN_PROGRESS' => array(
+            'name' => 'Em andamento',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => false,
+            'delivery' => false,
+            'logable' => false,
+            'invoice' => false,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => false
+        ),
+        'APPROVED' => array(
+            'name' => 'Aprovada',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => false,
+            'delivery' => false,
+            'logable' => false,
+            'invoice' => false,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => false
+        ),
+        'COMPLETED' => array(
+            'name' => 'Completada',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => false,
+            'delivery' => false,
+            'logable' => true,
+            'invoice' => true,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => true
+        ),
+        'IN_DISPUTE' => array(
+            'name' => 'Em disputa',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => true,
+            'delivery' => false,
+            'logable' => true,
+            'invoice' => true,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => true
+        ),
+        'REFUNDED' => array(
+            'name' => 'Devolvida',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => false,
+            'delivery' => false,
+            'logable' => false,
+            'invoice' => false,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => false
+        ),
+        'CANCELLED' => array(
+            'name' => 'Cancelada',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => false,
+            'delivery' => false,
+            'logable' => false,
+            'invoice' => false,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => false
+        ),
+		'CHARGEBACK' => array(
+            'name' => 'Chargeback',
+            'send_email' => false,
+            'template' => '',
+            'hidden' => false,
+            'delivery' => false,
+            'logable' => false,
+            'invoice' => false,
+            'unremovable' => false,
+            'shipped' => false,
+            'paid' => false
+        )
+    );
+
+    public static function getOrderStatus()
+    {
+        return self::$order_status;
+    }
+
+	public static function getCustomOrderStatusBcash()
+    {
+        return self::$order_status_bcash;
+    }
+
+}

@@ -39,7 +39,7 @@ class bcash extends PaymentModule
 			return false;
 		}
 
-		 if (! $this->generateBcashOrderStatus()) {
+		 if (!$this->generateBcashOrderStatus()) {
             return false;
         }
 
@@ -50,7 +50,15 @@ class bcash extends PaymentModule
 
 	public function uninstall()
 	{
-	  if (!parent::uninstall()) {
+	  if (!$this->deleteBcashOrderStatus() ||
+	  		!Configuration::deleteByName('PS_OS_BCASH_IN_PROGRESS') ||
+			!Configuration::deleteByName('PS_OS_BCASH_APPROVED') ||
+			!Configuration::deleteByName('PS_OS_BCASH_COMPLETED') ||
+			!Configuration::deleteByName('PS_OS_BCASH_IN_DISPUTE') ||
+			!Configuration::deleteByName('PS_OS_BCASH_REFUNDED') ||
+			!Configuration::deleteByName('PS_OS_BCASH_CANCELLED') ||
+			!Configuration::deleteByName('PS_OS_BCASH_CHARGEBACK') ||
+			!parent::uninstall()) {
 	    return false;
 	  }
 	  return true;
@@ -153,15 +161,16 @@ class bcash extends PaymentModule
         return $this->display(__FILE__, 'views/templates/hook/payment_option.tpl');
     }
 
-	private function generateBcashOrderStatus() {
-/*		$image = _PS_ROOT_DIR_ . '/modules/bcash/logo.gif';
+
+	private function generateBcashOrderStatus() 
+	{
 
 		foreach (BcashStateHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
 
 			$order_state = new OrderState();
             $order_state->module_name = 'bcash';
             $order_state->send_email = $statusBcash['send_email'];
-            $order_state->color = '#00FF99';
+            $order_state->color = $statusBcash['color'];
             $order_state->hidden = $statusBcash['hidden'];
             $order_state->delivery = $statusBcash['delivery'];
             $order_state->logable = $statusBcash['logable'];
@@ -169,20 +178,34 @@ class bcash extends PaymentModule
 			$order_state->unremovable = $statusBcash['unremovable'];
 			$order_state->shipped = $statusBcash['shipped'];
 			$order_state->paid = $statusBcash['paid'];
-			$order_state->name = $statusBcash['name'];
+
+			foreach (Language::getLanguages() as $language) {
+				$order_state->name[(int) $language['id_lang']] = $statusBcash['name'];
+			}
 
 	        if ($order_state->add()) {//save new order status
 
-                // $file = _PS_ROOT_DIR_ . '/img/os/' . (int) $order_state->id . '.gif';
-                // copy($image, $file);
+				copy(dirname(__FILE__).'/logo.gif', _PS_ROOT_DIR_ . '/img/os/' . $order_state->id.'.gif');
 
-				Configuration::updateValue('PS_OS_BCASH', (int)$order_state->id);
+
+				//Guarda referencia (id) do status criado na tabela ps_order_state, para facilitar na hora de recuperar
+				Configuration::updateValue('PS_OS_BCASH_' . $key, (int)$order_state->id);
 	        }
 		}
- * 
- */
+
+		return true;
 	}//generateBcashOrderStatus
 
+	private function deleteBcashOrderStatus()
+	{
+		foreach (BcashStateHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
+
+			$order_state = new OrderState(Configuration::get('PS_OS_BCASH_' . $key));
+			if (!$order_state->delete())
+				return false;
+		}
+		return true;
+	}//deleteBcashOrderStatus
 }
 
 

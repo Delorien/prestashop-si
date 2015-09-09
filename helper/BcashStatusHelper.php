@@ -16,6 +16,7 @@ class BcashStateHelper
  	private static $order_status_bcash = array(
         'IN_PROGRESS' => array(
             'name' => 'Em andamento',
+            'color' => '#00FF99',
             'send_email' => false,
             'template' => '',
             'hidden' => false,
@@ -28,6 +29,7 @@ class BcashStateHelper
         ),
         'APPROVED' => array(
             'name' => 'Aprovada',
+            'color' => '#00FF99',
             'send_email' => false,
             'template' => '',
             'hidden' => false,
@@ -40,6 +42,7 @@ class BcashStateHelper
         ),
         'COMPLETED' => array(
             'name' => 'Completada',
+            'color' => '#00FF99',
             'send_email' => false,
             'template' => '',
             'hidden' => false,
@@ -52,6 +55,7 @@ class BcashStateHelper
         ),
         'IN_DISPUTE' => array(
             'name' => 'Em disputa',
+            'color' => '#FF9999',
             'send_email' => false,
             'template' => '',
             'hidden' => true,
@@ -64,6 +68,7 @@ class BcashStateHelper
         ),
         'REFUNDED' => array(
             'name' => 'Devolvida',
+            'color' => '#FFCC99',
             'send_email' => false,
             'template' => '',
             'hidden' => false,
@@ -76,6 +81,7 @@ class BcashStateHelper
         ),
         'CANCELLED' => array(
             'name' => 'Cancelada',
+            'color' => '#FF9999',
             'send_email' => false,
             'template' => '',
             'hidden' => false,
@@ -88,6 +94,7 @@ class BcashStateHelper
         ),
 		'CHARGEBACK' => array(
             'name' => 'Chargeback',
+            'color' => '#FFCC99',
             'send_email' => false,
             'template' => '',
             'hidden' => false,

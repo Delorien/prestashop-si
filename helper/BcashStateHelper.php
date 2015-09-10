@@ -1,8 +1,8 @@
 <?php
 
-class BcashStateHelper extends ModuleFrontController
+class BcashStateHelper
 {
-	static function getStateAbbreviation($state) {
+	public static function getStateAbbreviation($state) {
 
 		$estados = array(
 			"acre" => "AC",

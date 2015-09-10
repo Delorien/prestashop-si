@@ -1,7 +1,6 @@
 <?php
 
-
-class BcashStateHelper
+class BcashStatusHelper
 {
 	private static $order_status = array(
         'IN_PROGRESS' => 'Em andamento',

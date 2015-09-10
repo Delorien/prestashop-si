@@ -9,7 +9,6 @@ include_once dirname(__FILE__).'/helper/BcashStatusHelper.php';
 class bcash extends PaymentModule
 {
 	const prefix = 'BCASH_';
-	const IN_PROGRESS = 1;
 
 	public function __construct() 
 	{
@@ -165,7 +164,7 @@ class bcash extends PaymentModule
 	private function generateBcashOrderStatus() 
 	{
 
-		foreach (BcashStateHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
+		foreach (BcashStatusHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
 
 			$order_state = new OrderState();
             $order_state->module_name = 'bcash';
@@ -198,7 +197,7 @@ class bcash extends PaymentModule
 
 	private function deleteBcashOrderStatus()
 	{
-		foreach (BcashStateHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
+		foreach (BcashStatusHelper::getCustomOrderStatusBcash() as $key => $statusBcash) {
 
 			$order_state = new OrderState(Configuration::get('PS_OS_BCASH_' . $key));
 			if (!$order_state->delete())

@@ -115,6 +115,9 @@
 			</div>
 
 			<input id="b-button-sucess-credit" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
+			<p id="b-termos-credit" class="bcash-termos">
+				Ao prosseguir o pagamento você concorda com o <a target="_blank" href="https://www.bcash.com.br/checkout/pay/contrato">Contrato de Gestão de Pagamentos</a>
+			</p>
 		</div>
 
 
@@ -138,6 +141,9 @@
 			</div>
 
 			<input id="b-button-sucess-tef" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
+			<p id="b-termos-tef" class="bcash-termos">
+				Ao prosseguir o pagamento você concorda com o <a target="_blank" href="https://www.bcash.com.br/checkout/pay/contrato">Contrato de Gestão de Pagamentos</a>
+			</p>
 		</div>
 
 		<div class="forma-pagamento">
@@ -160,6 +166,9 @@
 			</div>
 
 			<input id="b-button-sucess-bankslip" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
+			<p id="b-termos-bankslip" class="bcash-termos">
+				Ao prosseguir o pagamento você concorda com o <a target="_blank" href="https://www.bcash.com.br/checkout/pay/contrato">Contrato de Gestão de Pagamentos</a>
+			</p>
 		</div>
 
 	</form>

@@ -32,15 +32,24 @@ $(document).ready(function() {
 			$('.b-button-sucess').hide('fast');
 			$('#b-button-sucess-credit').show('fast');
 
+			$('.bcash-termos').hide('fast');
+			$('#b-termos-credit').show('fast');
+
 		} else {
 			$('#card-data').hide('slow');
 
 			if ($('#' + radio.id, '#tef_list').length == 1) {
 				$('.b-button-sucess').hide('fast');
 				$('#b-button-sucess-tef').show('fast');
+
+				$('.bcash-termos').hide('fast');
+				$('#b-termos-tef').show('fast');
 			}else {
 				$('.b-button-sucess').hide('fast');
 				$('#b-button-sucess-bankslip').show('fast');
+
+				$('.bcash-termos').hide('fast');
+				$('#b-termos-bankslip').show('fast');
 			}
 		}
 	};

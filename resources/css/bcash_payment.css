@@ -23,6 +23,20 @@
 	padding: 10px 5px;
 }
 
+#bcash .forma-pagamento .bcash-termos {
+	display: none;
+}
+
+#bcash .forma-pagamento .bcash-termos a {
+	color: #1b88d4;
+}
+
+#bcash .forma-pagamento .bcash-termos a:hover {
+	background-color: #3788CC;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
 #bcash .bandeira input[type='radio'] {
 	position: absolute;
 	top: 0px;

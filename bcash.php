@@ -5,8 +5,9 @@ if (! defined('_PS_VERSION_')) {
 }
 
 include_once dirname(__FILE__).'/helper/BcashStatusHelper.php';
+include_once dirname(__FILE__).'/helper/PaymentMethodHelper.php';
 
-class bcash extends PaymentModule
+class Bcash extends PaymentModule
 {
 	const prefix = 'BCASH_';
 
@@ -152,13 +153,33 @@ class bcash extends PaymentModule
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_option.css', 'all');
 		$this->context->smarty->assign(
 			array(
-				// $this->context->link->getModuleLink('module_folder_name','controller_name',array_of_params);
       			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment')
       		)
   		);
 
         return $this->display(__FILE__, 'views/templates/hook/payment_option.tpl');
     }
+
+	public function hookPaymentReturn($params)
+	{
+		if (!$this->active) {
+			return;
+		}
+
+		$paymentMethodHelper = new PaymentMethodHelper();
+		$paymentMethod = $paymentMethodHelper->getById(Tools::getValue('payment_method'));
+
+		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_payment_return.css', 'all');
+		$this->context->smarty->assign(
+			array(
+				'bcash_payment_method' => $paymentMethod,
+      			'bcash_transaction_id' => Tools::getValue('bcash_transaction_id'),
+      			'bcash_paymentLink' => Tools::getValue('bcash_paymentLink')
+      		)
+  		);
+
+		return $this->display(__FILE__, 'views/templates/hook/payment_return.tpl');
+	}
 
 
 	private function generateBcashOrderStatus() 
@@ -185,7 +206,6 @@ class bcash extends PaymentModule
 	        if ($order_state->add()) {//save new order status
 
 				copy(dirname(__FILE__).'/logo.gif', _PS_ROOT_DIR_ . '/img/os/' . $order_state->id.'.gif');
-
 
 				//Guarda referencia (id) do status criado na tabela ps_order_state, para facilitar na hora de recuperar
 				Configuration::updateValue('PS_OS_BCASH_' . $key, (int)$order_state->id);

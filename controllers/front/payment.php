@@ -1,7 +1,7 @@
 <?php
 
-include dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
-include dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
+include_once dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
+include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
 
 use Bcash\Service\Installments;
 use Bcash\Exception\ValidationException;

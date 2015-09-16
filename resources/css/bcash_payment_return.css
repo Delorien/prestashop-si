@@ -1,0 +1,135 @@
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+#bcash .b-info-panel {
+	display: inline-block;
+	width: 50%;
+	float: left;
+	margin-bottom: 25px;
+	padding: 8px 15px;
+	text-align: center;
+}
+
+#bcash .b-info-panel:nth-last-child(1) {
+	border-left:1px solid #000;
+}
+
+#bcash .b-info-panel span {
+	display: block;
+	margin-bottom: 15px;
+}
+
+#bcash .b-font-small {
+	font-size: 15px;
+}
+
+#bcash .b-font-medium {
+	font-size: 22px;
+}
+
+#bcash .b-font-big {
+	font-size: 40px;
+}
+
+#bcash a {
+	color: #1b88d4;
+}
+
+#bcash a:hover {
+	background-color: #3788CC;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+#bcash .payment-selected {
+	display: inline-block;
+	pointer-events: none;
+	background: url(../images/application-sprite.png) no-repeat;
+	width: 70px;
+	height: 46px;
+	text-indent: -9999px;
+	cursor: pointer;
+}
+
+/* visa */
+#bcash .band-1 {
+	background-position: 0 -177px
+}
+
+/* master */
+#bcash .band-2 {
+	background-position: 0 -226px
+}
+
+/* amex */
+#bcash .band-37 {
+	background-position: 0 -274px
+}
+
+/* aura */
+#bcash .band-45 {
+	background-position: 0 -323px
+}
+
+/* diners */
+#bcash .band-55 {
+	background-position: 0 -371px
+}
+
+/* hiper */
+#bcash .band-56 {
+	background-position: 0 -420px
+}
+
+/* elo */
+#bcash .band-63 {
+	background-position: 0 -468px
+}
+
+/* boleto */
+#bcash .band-10 {
+	background-position: 0 -517px
+}
+
+/* bb */
+#bcash .band-58 {
+	background-position: 0 -565px
+}
+
+/* bradesco */
+#bcash .band-59 {
+	background-position: 0 -614px
+}
+
+/* itau */
+#bcash .band-60 {
+	background-position: 0 -662px
+}
+
+/* hsbc */
+#bcash .band-62 {
+	background-position: 0 -759px
+}
+
+/* banrisul*/
+#bcash .band-61 {
+	background-position: 0 -711px
+}
+
+#bcash .b-pay-button {
+	display:inline-block;
+	border: 0;
+	padding: 5px 15px;
+	border-radius: 2px;
+	background-color: #76b759;
+	color: #fff;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+
+#bcash .b-pay-button:hover {
+	background-color: #5e9a43;
+}

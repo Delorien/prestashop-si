@@ -31,9 +31,20 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 		try {
 		    $response = $payment->create($transactionRequest);
-		    echo "<pre>";
-    		print_r($response);die;
-		    echo "</pre>";
+
+		    //	Redirect	on	order	confirmation	page
+			Tools::redirect('index.php?controller=order-confirmation' .
+			'&id_cart='		. $this->context->cart->id .
+			'&id_module='	. $this->module->id . 
+			'&id_order='	. $this->module->currentOrder .
+			'&key='			. $this->context->customer->secure_key .
+			'&bcash_transaction_id='	. $response->transactionId .
+			'&bcash_paymentLink='		. $response->paymentLink .
+			'&payment_method='		. Tools::getValue('payment-method') );
+
+		    // echo "<pre>";
+    		// print_r($response);die;
+		    // echo "</pre>";
 		} catch (ValidationException $e) {
 		    echo "ErroTeste: " . $e->getMessage() . "\n";
 		    echo "<pre>";

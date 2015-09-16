@@ -47,6 +47,27 @@ class PaymentMethodHelper
 		return $payment;
 	}
 
+	public function getById($id) {
+
+		foreach (self::$cards as $method) {
+			if($method->id == $id){
+				return $method;
+			}
+		}
+
+		foreach (self::$bankSlip as $method) {
+			if($method->id == $id){
+				return $method;
+			}
+		}
+
+		foreach (self::$onlineTransfer as $method) {
+			if($method->id == $id){
+				return $method;
+			}
+		}
+	}
+
 	public function getPaymentMethods() {
 		return array(
 			self::CARD_TYPE => self::$cards,

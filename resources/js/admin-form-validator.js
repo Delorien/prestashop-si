@@ -33,6 +33,15 @@ $(document).ready(function() {
 			},
 			desconto_credito : {
 				isPercentValid : true
+			},
+			campo_cpf : {
+				required : true
+			},
+			campo_cpf_select : {
+				required : true
+			},
+			tableAjax : {
+				required : true
 			}
 		},
 		messages : {
@@ -41,10 +50,19 @@ $(document).ready(function() {
 				email : "Informe um email válido."
 			},
 			consumer_key : {
-				required : "Campo consumer key é obrigatório",
+				required : "Campo consumer key é obrigatório"
 			},
 			bcash_token : {
-				required : "Campo token é obrigatório",
+				required : "Campo token é obrigatório"
+			},
+			campo_cpf : {
+				required : "Selecione como o módulo deve tratar o cpf."
+			},
+			campo_cpf_select : {
+				required : "Selecione a tabela e o campo para usar como cpf."
+			},
+			tableAjax : {
+				required : "Selecione a tabela e o campo para usar como cpf."
 			}
 		}
 	});
@@ -81,6 +99,19 @@ $(document).ready(function() {
 	     }else{
 	          $(this).val('FALSE');
 	     }
+	});
+
+	$('input[name=campo_cpf]').change(function(){
+	    var value = $( this ).val();
+
+		if (value == 'specified') {
+			$('#cpf-spec').show('slow');
+		} else {
+			$('#tableAjax').val('');
+			$('#cpf-spec').hide('slow');
+			$(".select-column").hide('slow');
+			$('#campo_cpf_select').find('option').remove()
+		}
 	});
 
 });

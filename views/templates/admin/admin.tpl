@@ -45,19 +45,46 @@
 		</div>
 
 		<h4>Consumidor</h4>
+
 		<div class="b-form-group">
 			<label>CPF</label>
-			<select style="height: 35px" name="campo_cpf" id="campo_cpf">
-				<option value="" selected="selected">Exibir campo no checkout para preenchimento</option>
-				{foreach from=$campos_customer item=campo}
-					{if $campo == $campo_cpf}
-						<option value="{$campo}" selected="selected" >Usar campo <span>{$campo}</span> da tabela Customer como CPF</option>
-					{else}
-						<option value="{$campo}">Usar campo <span>{$campo}</span> da tabela Customer como CPF</option>
-					{/if}
-				{/foreach}
-			</select>
+			<label class="label_campo_cpf" for="campo_cpf_def">
+				{if $campo_cpf eq 'exibir'}
+					<input type="radio" id="campo_cpf_def" name="campo_cpf" checked value="exibir"> <span>Exibir campo no checkout para preenchimento</span>
+				{else}
+					<input type="radio" id="campo_cpf_def" name="campo_cpf" value="exibir"> <span>Exibir campo no checkout para preenchimento</span>
+				{/if}
+			</label>
+			<label class="label_campo_cpf" for="campo_cpf_specified">
+				{if $campo_cpf == 'specified'}
+					<input type="radio" id="campo_cpf_specified" name="campo_cpf" checked value="specified"> <span>Especificar campo do CPF</span>
+					<label>(tabela: {$table_cpf}, campo: {$campo_cpf_select})</label>
+				{else}
+					<input type="radio" id="campo_cpf_specified" name="campo_cpf" value="specified"> <span>Especificar campo do CPF</span>
+				{/if}
+
+			</label>
+
+			<div class="b-form-group" id="cpf-spec" style="display: none">
+
+				<div class="table-search">
+					<label>Listar campos da tabela: </label>
+					<input type="text" id="tableAjax" name="tableAjax" style="width: 160px;" />
+					<input type="button" id="tableAjaxButton" value="Buscar" />
+				</div>
+
+				<div class="select-column" style="display: none">
+					<label>Usar campo 
+						<select style="height: 35px" name="campo_cpf_select" id="campo_cpf_select" >
+						</select>
+						como CPF
+					</label>
+				</div>
+			</div>
 		</div>
+
+
+
 
 		<div class="b-form-group">
 			<label>Telefone</label>
@@ -86,3 +113,28 @@
 		<input class="b-button b-button-primary" name="btn_submit" type="submit" value="Salvar" />
 	</form>
 </div>
+
+<script>
+	$("#tableAjaxButton").click(function($table)
+	{
+		$.ajax({
+		  type: 'POST',
+		  url: '{$ajax_dir}',
+		  data: 'table=' + $("#tableAjax").val(),
+		  dataType: 'json',
+		  success: function(json) {
+
+			$('#campo_cpf_select').find('option').remove()
+
+			$(json).each(function(index, element) {
+				$("#campo_cpf_select").append('<option value=' + element + '>' + element + '</option>');
+			});
+			$(".select-column").show('slow');
+		  },
+		  error: function (xhr, ajaxOptions, thrownError) {
+		  		$(".select-column").hide('slow');
+				alert('Não foi possível carregar os campos da tabela ' + $("#tableAjax").val() + '. Por favor verifieque o nome da tabela.')
+	      }
+		});
+	});
+</script>

@@ -32,8 +32,8 @@ class Bcash extends PaymentModule
 
 	public function install()
 	{
-		if (!parent::install() || 
-			!$this->registerHook('payment') || 
+		if (!parent::install() ||
+			!$this->registerHook('payment') ||
 			!$this->registerHook('paymentReturn')) {
 
 			return false;
@@ -101,8 +101,15 @@ class Bcash extends PaymentModule
        	    Configuration::updateValue(self::prefix . 'DESCONTO_BOLETO', $desconto_boleto);
        	    Configuration::updateValue(self::prefix . 'DESCONTO_TEF', $desconto_tef);
        	    Configuration::updateValue(self::prefix . 'DESCONTO_CREDITO', $desconto_credito);
-       	    Configuration::updateValue(self::prefix . 'CAMPO_CPF', $campo_cpf);
 			Configuration::updateValue(self::prefix . 'CAMPO_FONE', $campo_fone);
+
+			Configuration::updateValue(self::prefix . 'CAMPO_CPF', $campo_cpf);
+			if ($campo_cpf == 'specified') {
+				$campo_cpf_select = strval(Tools::getValue('campo_cpf_select'));
+				$table_cpf = strval(Tools::getValue('tableAjax'));
+				Configuration::updateValue(self::prefix . 'CAMPO_CPF_SELECT', $campo_cpf_select);
+				Configuration::updateValue(self::prefix . 'TABLE_CPF', $table_cpf);
+			}
 
 			if (!empty($sandbox)) {
         	    Configuration::updateValue(self::prefix . 'SANDBOX', 1);
@@ -124,6 +131,9 @@ class Bcash extends PaymentModule
 		$this->context->controller->addJS($this->getPathUri() . 'resources/js/admin-form-validator.js', 'all');
 		$this->context->smarty->assign('action_post', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 
+		$link = new Link(); 
+		_PS_BASE_URL_.__PS_BASE_URI__."testadmin/".$link->getAdminLink('AdminTest', true);
+
 		$this->context->smarty->assign(
 	        array(
 	            'titulo' => Configuration::get(self::prefix . 'TITULO'),
@@ -135,13 +145,15 @@ class Bcash extends PaymentModule
 				'desconto_credito' => Configuration::get(self::prefix.'DESCONTO_CREDITO'),
 				'sandbox' => Configuration::get(self::prefix.'SANDBOX'),
 				'campo_cpf' => Configuration::get(self::prefix.'CAMPO_CPF'),
-				'campos_customer' => array_keys(get_object_vars(new Customer())),
+				'table_cpf' => Configuration::get(self::prefix.'TABLE_CPF'),
+				'campo_cpf_select' => Configuration::get(self::prefix.'CAMPO_CPF_SELECT'),
 				'campo_fone' => Configuration::get(self::prefix.'CAMPO_FONE'),
-				'campos_fone' => array_keys(get_object_vars(new Customer()))
+				'campos_fone' => array_keys(get_object_vars(new Customer())),
+				'ajax_dir' => _MODULE_DIR_ . 'bcash/ajax_tables.php'
 	        )
 	    );
 
-		return $this->display(__FILE__, 'views/templates/admin/admin.tpl');	   
+		return $this->display(__FILE__, 'views/templates/admin/admin.tpl');
   	}
 
 	public function hookPayment($params)
@@ -226,22 +238,4 @@ class Bcash extends PaymentModule
 		return true;
 	}//deleteBcashOrderStatus
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

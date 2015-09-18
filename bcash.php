@@ -107,8 +107,10 @@ class Bcash extends PaymentModule
 			if ($campo_cpf == 'specified') {
 				$campo_cpf_select = strval(Tools::getValue('campo_cpf_select'));
 				$table_cpf = strval(Tools::getValue('tableAjax'));
+				$where_cpf = strval(Tools::getValue('where_cpf_select'));
 				Configuration::updateValue(self::prefix . 'CAMPO_CPF_SELECT', $campo_cpf_select);
 				Configuration::updateValue(self::prefix . 'TABLE_CPF', $table_cpf);
+				Configuration::updateValue(self::prefix . 'WHERE_CPF', $where_cpf);
 			}
 
 			if (!empty($sandbox)) {
@@ -147,6 +149,7 @@ class Bcash extends PaymentModule
 				'campo_cpf' => Configuration::get(self::prefix.'CAMPO_CPF'),
 				'table_cpf' => Configuration::get(self::prefix.'TABLE_CPF'),
 				'campo_cpf_select' => Configuration::get(self::prefix.'CAMPO_CPF_SELECT'),
+				'where_cpf_select' => Configuration::get(self::prefix.'WHERE_CPF'),
 				'campo_fone' => Configuration::get(self::prefix.'CAMPO_FONE'),
 				'campos_fone' => array_keys(get_object_vars(new Customer())),
 				'ajax_dir' => _MODULE_DIR_ . 'bcash/ajax_tables.php'

@@ -58,7 +58,7 @@
 			<label class="label_campo_cpf" for="campo_cpf_specified">
 				{if $campo_cpf == 'specified'}
 					<input type="radio" id="campo_cpf_specified" name="campo_cpf" checked value="specified"> <span>Especificar campo do CPF</span>
-					<label>(tabela: {$table_cpf}, campo: {$campo_cpf_select})</label>
+					<label>(tabela: {$table_cpf}, campo: {$campo_cpf_select}, id_customer: {$where_cpf_select})</label>
 				{else}
 					<input type="radio" id="campo_cpf_specified" name="campo_cpf" value="specified"> <span>Especificar campo do CPF</span>
 				{/if}
@@ -74,30 +74,17 @@
 				</div>
 
 				<div class="select-column" style="display: none">
-					<label>Usar campo 
+					<label>Campo com CPF:
 						<select style="height: 35px" name="campo_cpf_select" id="campo_cpf_select" >
 						</select>
-						como CPF
+					</label>
+					<label>
+						Campo com id_customer:
+						<select style="height: 35px" name="where_cpf_select" id="where_cpf_select" >
+						</select>
 					</label>
 				</div>
 			</div>
-		</div>
-
-
-
-
-		<div class="b-form-group">
-			<label>Telefone</label>
-			<select style="height: 35px" name="campo_fone" id="campo_fone">
-				<option value="" selected="selected">Exibir campo no checkout para preenchimento</option>
-				{foreach from=$campos_fone item=campo_f}
-					{if $campo_f == $campo_fone}
-						<option value="{$campo_f}" selected="selected" >Usar campo <span>{$campo_f}</span> da tabela Customer como CPF</option>
-					{else}
-						<option value="{$campo_f}">Usar campo <span>{$campo_f}</span> da tabela Customer como CPF</option>
-					{/if}
-				{/foreach}
-			</select>
 		</div>
 
 		<div class="b-form-group">
@@ -129,6 +116,13 @@
 			$(json).each(function(index, element) {
 				$("#campo_cpf_select").append('<option value=' + element + '>' + element + '</option>');
 			});
+
+			$('#where_cpf_select').find('option').remove()
+
+			$(json).each(function(index, element) {
+				$("#where_cpf_select").append('<option value=' + element + '>' + element + '</option>');
+			});
+
 			$(".select-column").show('slow');
 		  },
 		  error: function (xhr, ajaxOptions, thrownError) {

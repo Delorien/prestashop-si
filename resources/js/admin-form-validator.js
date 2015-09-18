@@ -111,6 +111,7 @@ $(document).ready(function() {
 			$('#cpf-spec').hide('slow');
 			$(".select-column").hide('slow');
 			$('#campo_cpf_select').find('option').remove()
+			$('#where_cpf_select').find('option').remove()
 		}
 	});
 

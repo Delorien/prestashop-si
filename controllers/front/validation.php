@@ -42,9 +42,6 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 			'&bcash_paymentLink='		. $response->paymentLink .
 			'&payment_method='		. Tools::getValue('payment-method') );
 
-		    // echo "<pre>";
-    		// print_r($response);die;
-		    // echo "</pre>";
 		} catch (ValidationException $e) {
 		    echo "ErroTeste: " . $e->getMessage() . "\n";
 		    echo "<pre>";
@@ -110,12 +107,45 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    $customer = new Bcash\Domain\Customer();
 	    $customer->setMail($buyer->email);
 	    $customer->setName($buyer->firstname . ' ' . $buyer->lastname);
-	    $customer->setCpf(Tools::getValue('bcash_cpf'));
-		$customer->setPhone(Tools::getValue('bcash_telefone'));
+	    $customer->setCpf($this->getCPF());
+		$customer->setPhone($this->getTel());
 		$address = $this->createAddress();
 	    $customer->setAddress($address);
 
 	    return $customer;
+	}
+
+	function getCPF() 
+	{
+		if ( Configuration::get(self::prefix.'CAMPO_CPF') == 'exibir' ) {
+			return Tools::getValue('bcash_cpf');
+		}else {
+			$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_CPF');
+			$coluna = Configuration::get(self::prefix.'CAMPO_CPF_SELECT');
+			$where = Configuration::get(self::prefix.'WHERE_CPF');
+
+			$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
+					' WHERE ' . $where . ' = ' . $this->context->customer->id;
+
+			$db = Db::getInstance();
+			$result = Db::getInstance()->getValue($sql);
+			return $result;
+		}
+	}
+
+	function getTel() 
+	{
+		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
+
+		$phone = $deliveryAddress->phone;
+		if($phone) {
+			return $phone;
+		}
+
+		$phone_mobile = $deliveryAddress->phone_mobile;
+		if($phone_mobile) {
+			return $phone_mobile;
+		}
 	}
 
 	private function createAddress()

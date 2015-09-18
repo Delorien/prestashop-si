@@ -115,7 +115,7 @@
 
 #bcash .select-column select {
 	width: 170px;
-	display: inline;
+	display: block;
 	vertical-align: middle;
 	margin-left: 5px;
 	margin-right: 5px;

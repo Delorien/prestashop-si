@@ -47,7 +47,6 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	            'anosVencimento' => $this->getYears(),
 
 				'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
-				'campo_fone' => Configuration::get(self::prefix . 'CAMPO_FONE'),
 
 				'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
 	        )

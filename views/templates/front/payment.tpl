@@ -5,26 +5,13 @@
 <div class="bcash" id="bcash">
 	<form action="{$action_post|escape:'html'}" method="post">
 
-		{if $campo_cpf == null || $campo_fone == null}
+		{if $campo_cpf == 'exibir'}
 			<h3>Seus Dados</h3>
 			<div class="forma-pagamento b-form-horizontal">
-		{/if}
 
-			{if $campo_cpf == null}
 			<div class="b-form-group">
 				<label style="margin-right: 10px">CPF</label>
 				<input name="bcash_cpf" type="text" placeholder="CPF"/>
-			</div>
-			{/if}
-
-			{if $campo_fone == null}
-			<div class="b-form-group">
-				<label style="margin-right: 10px">Telefone/Cel: </label>
-				<input name="bcash_telefone" type="text" placeholder="Telefone/Cel"/>
-			</div>
-			{/if}
-
-		{if $campo_cpf == null || $campo_fone == null}
 			</div>
 		{/if}
 

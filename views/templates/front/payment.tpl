@@ -9,9 +9,10 @@
 			<h3>Seus Dados</h3>
 			<div class="forma-pagamento b-form-horizontal">
 
-			<div class="b-form-group">
-				<label style="margin-right: 10px">CPF</label>
-				<input name="bcash_cpf" type="text" placeholder="CPF"/>
+				<div class="b-form-group">
+					<label style="margin-right: 10px">CPF</label>
+					<input name="bcash_cpf" type="text" placeholder="CPF"/>
+				</div>
 			</div>
 		{/if}
 

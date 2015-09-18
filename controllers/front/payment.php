@@ -35,19 +35,18 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	        array(
 	            'cards' => $cards,
 	            'cardsInstallments' => $cardsInstallments,
-	            'cardsAmount' => $cardsInstallments[0]->installments[0]->amount,
+	            'cardsAmount' => number_format(Tools::ps_round($cardsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
 	            'tefs' => $tefs,
-	            'tefsAmount' => $TEFsInstallments[0]->installments[0]->amount,
+	            'tefsAmount' => number_format(Tools::ps_round($TEFsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
 	            'bankSlips' => $bankSlips,
-	            'bankSlipsAmount' => $bankSlipsInstallments[0]->installments[0]->amount,
+	            'bankSlipsAmount' => number_format(Tools::ps_round($bankSlipsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
 	            'mesesVencimento' => $this->getMonths(),
 	            'anosVencimento' => $this->getYears(),
 
 				'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
-
 				'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
 	        )
 	    );

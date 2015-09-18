@@ -7,13 +7,17 @@
 
 		<div>
 			<span class="b-font-small">
-				Para acompanhar seu pedido <a href="https://www.bcash.com.br/site/Entrar">clique aqui</a>
+				Para acompanhar seu pedido <a href="https://www.bcash.com.br/site/Entrar">clique aqui</a>.
 			</span>
 
 			{if $bcash_payment_method->type == "ONLINE_TRANSFER"}
 				<span>Um e-mail foi enviado para você com essas informações.</span>
 			{/if}
 		</div>
+
+		<span class="b-font-small" style="margin-top: 20px;">O número do seu pedido é:</span>
+		<span class="b-font-big" style="margin-bottom: 20px">{$store_order_id}</span>
+
 	</div>
 	<div class='b-info-panel'>
 		<div class="payment-selected band-{$bcash_payment_method->id}"></div>

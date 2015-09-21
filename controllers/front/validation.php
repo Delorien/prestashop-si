@@ -2,6 +2,7 @@
 
 include dirname(__FILE__).'/../../helper/BcashStateHelper.php';
 include dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
+include_once dirname(__FILE__).'/payment.php';
 
 use Bcash\Domain\StateEnum;
 use Bcash\Domain\PaymentMethod;
@@ -43,15 +44,9 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 			'&payment_method='		. Tools::getValue('payment-method') );
 
 		} catch (ValidationException $e) {
-		    echo "ErroTeste: " . $e->getMessage() . "\n";
-		    echo "<pre>";
-		    print_r($e->getErrors());die;
-		    echo "</pre>";
+	    	$this->retentativa($e);
 		} catch (ConnectionException $e) {
-		    echo "ErroTeste: " . $e->getMessage() . "\n";
-		    echo "<pre>";
-		    print_r($e->getErrors());die;
-		    echo "</pre>";
+			$this->retentativa($e);
 		}
 
 	}
@@ -215,17 +210,25 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    return $creditCard;
 	}
 
+
+	function retentativa($e)
+	{
+		$errors = $e->getErrors()->list;
+
+		$params = array(
+			'retentativa' => true,
+		    'b_errors' => $errors, 
+		);
+
+		//See ParentOrderController.php L-74
+		$oldCart = new Cart($this->context->cart->id);
+
+		$duplication = $oldCart->duplicate();
+		self::$cookie->id_cart = $duplication['cart']->id;
+		self::$cookie->write();
+
+		$url = $this->context->link->getModuleLink('bcash', 'payment', $params);
+
+		Tools::redirectLink($url);
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

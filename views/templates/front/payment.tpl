@@ -3,6 +3,20 @@
 {/capture}
 
 <div class="bcash" id="bcash">
+
+
+	{if $b_erros_messages|@count > 0}
+	<div class="box-error">
+	  <h3 class="title">Ocorreram alguns erros durante o processamento da transação</h3>
+
+	  <ul>
+	  	{foreach from=$b_erros_messages item=b_error}
+	    	<li>{$b_error}</li>
+	    {/foreach}
+	  </ul>
+	</div>
+	{/if}
+
 	<form action="{$action_post|escape:'html'}" method="post">
 
 		{if $campo_cpf == 'exibir'}

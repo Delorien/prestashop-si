@@ -323,3 +323,22 @@
 	font-weight: bold;
 	margin-bottom: 15px;
 }
+
+.box-error {
+  background: #A9211F;
+  border-bottom: 2px solid #831A18;
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.box-error .title {
+  margin: 0 0 15px;
+  font-weight: normal;
+}
+
+.box-error ul {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}

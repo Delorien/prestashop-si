@@ -31,25 +31,35 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		$bankSlipsInstallments = $this->getBankSlipInstallments($installments->paymentTypes);
 
 
-		$this->context->smarty->assign(
-	        array(
-	            'cards' => $cards,
-	            'cardsInstallments' => $cardsInstallments,
-	            'cardsAmount' => number_format(Tools::ps_round($cardsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+		$data = array(
+		            'cards' => $cards,
+		            'cardsInstallments' => $cardsInstallments,
+		            'cardsAmount' => number_format(Tools::ps_round($cardsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
-	            'tefs' => $tefs,
-	            'tefsAmount' => number_format(Tools::ps_round($TEFsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+		            'tefs' => $tefs,
+		            'tefsAmount' => number_format(Tools::ps_round($TEFsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
-	            'bankSlips' => $bankSlips,
-	            'bankSlipsAmount' => number_format(Tools::ps_round($bankSlipsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+		            'bankSlips' => $bankSlips,
+		            'bankSlipsAmount' => number_format(Tools::ps_round($bankSlipsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
-	            'mesesVencimento' => $this->getMonths(),
-	            'anosVencimento' => $this->getYears(),
+		            'mesesVencimento' => $this->getMonths(),
+		            'anosVencimento' => $this->getYears(),
 
-				'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
-				'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
-	        )
-	    );
+					'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
+					'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
+				);
+
+		$erros_messages = array();
+
+		if (Tools::getValue('retentativa')) {
+			foreach (Tools::getValue('b_errors') as $erro) {
+				array_push($erros_messages, urldecode($erro['description']));
+			}
+		}
+
+		$data['b_erros_messages'] = $erros_messages;
+
+		$this->context->smarty->assign($data);
 
     	$this->setTemplate('payment.tpl');
   	}

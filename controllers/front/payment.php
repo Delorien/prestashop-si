@@ -12,6 +12,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	const prefix = 'BCASH_';
 
 	public $display_column_left = false;
+	private $tentativas = 0; 
 
 	/**
 	 * @see FrontController::initContent()
@@ -20,48 +21,60 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
   	{
 	   	parent::initContent();
 
-		$paymentMethodHelper = new PaymentMethodHelper();
-		$cards = $paymentMethodHelper->getPaymentMethods()['CARD'];
-		$tefs = $paymentMethodHelper->getPaymentMethods()['ONLINE_TRANSFER'];
-		$bankSlips = $paymentMethodHelper->getPaymentMethods()['BANKSLIP'];
-
 		$installments = $this->getInstallments();
-		$cardsInstallments = $this->getCardInstallments($installments->paymentTypes);
-		$TEFsInstallments = $this->getTEFSInstallments($installments->paymentTypes);
-		$bankSlipsInstallments = $this->getBankSlipInstallments($installments->paymentTypes);
 
+		if(!$installments === false) {
 
-		$data = array(
-		            'cards' => $cards,
-		            'cardsInstallments' => $cardsInstallments,
-		            'cardsAmount' => number_format(Tools::ps_round($cardsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+			$paymentMethodHelper = new PaymentMethodHelper();
+			$cards = $paymentMethodHelper->getPaymentMethods()['CARD'];
+			$tefs = $paymentMethodHelper->getPaymentMethods()['ONLINE_TRANSFER'];
+			$bankSlips = $paymentMethodHelper->getPaymentMethods()['BANKSLIP'];
 
-		            'tefs' => $tefs,
-		            'tefsAmount' => number_format(Tools::ps_round($TEFsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+			$cardsInstallments = $this->getCardInstallments($installments->paymentTypes);
+			$TEFsInstallments = $this->getTEFSInstallments($installments->paymentTypes);
+			$bankSlipsInstallments = $this->getBankSlipInstallments($installments->paymentTypes);
 
-		            'bankSlips' => $bankSlips,
-		            'bankSlipsAmount' => number_format(Tools::ps_round($bankSlipsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+			$data = array(
+			            'cards' => $cards,
+			            'cardsInstallments' => $cardsInstallments,
+			            'cardsAmount' => number_format(Tools::ps_round($cardsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
-		            'mesesVencimento' => $this->getMonths(),
-		            'anosVencimento' => $this->getYears(),
+			            'tefs' => $tefs,
+			            'tefsAmount' => number_format(Tools::ps_round($TEFsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
-					'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
-					'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
-				);
+			            'bankSlips' => $bankSlips,
+			            'bankSlipsAmount' => number_format(Tools::ps_round($bankSlipsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
 
-		$erros_messages = array();
+			            'mesesVencimento' => $this->getMonths(),
+			            'anosVencimento' => $this->getYears(),
 
-		if (Tools::getValue('retentativa')) {
-			foreach (Tools::getValue('b_errors') as $erro) {
-				array_push($erros_messages, urldecode($erro['description']));
+						'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
+						'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
+					);
+
+			$erros_messages = array();
+
+			if (Tools::getValue('retentativa')) {
+				foreach (Tools::getValue('b_errors') as $erro) {
+					array_push($erros_messages, urldecode($erro['description']));
+				}
 			}
-		}
 
-		$data['b_erros_messages'] = $erros_messages;
+			$data['b_erros_messages'] = $erros_messages;
 
-		$this->context->smarty->assign($data);
+			$this->context->smarty->assign($data);
 
-    	$this->setTemplate('payment.tpl');
+	    	$this->setTemplate('payment.tpl');
+    	}else {
+			$this->context->smarty->assign(
+				array(
+      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment')
+      			)
+  			);
+
+			$this->setTemplate('payment_option_erro.tpl');
+    	}
+
   	}
 
 	/**
@@ -88,7 +101,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		return $years;
 	}
 
-	private function getInstallments () {
+	private function getInstallments() {
 		$email = Configuration::get(self::prefix . 'EMAIL');
 		$token =  Configuration::get(self::prefix . 'TOKEN');
 
@@ -103,19 +116,22 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
  			$response = $installments->calculate($amount);
 
 		} catch (ValidationException $e) {
-		    echo "ErroTeste: " . $e->getMessage() . "\n";
-		    echo "<pre>";
-		    var_dump($e->getErrors());die;
-		    echo "</pre>";
-
+			return $this->retryInstallments();
 		} catch (ConnectionException $e) {
-		    echo "ErroTeste: " . $e->getMessage() . "\n";
-		    echo "<pre>";
-		    var_dump($e->getErrors());die;
-		    echo "</pre>";
+		 	return $this->retryInstallments();
 		}
 
 		return $response;
+	}
+
+	private function retryInstallments()
+	{
+		if ($this->tentativas < 5) {
+			$this->tentativas++;
+			$this->getInstallments();
+		}else {
+			return false;
+		}
 	}
 
 	private function getCardInstallments($installments)
@@ -126,7 +142,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			}
 		}
 	}
-	
+
 	private function getTEFSInstallments($installments)
 	{
 		foreach ($installments as $key => $value) {
@@ -135,7 +151,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			}
 		}
 	}
-	
+
 	private function getBankSlipInstallments($installments)
 	{
 		foreach ($installments as $key => $value) {

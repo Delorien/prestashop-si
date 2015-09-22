@@ -16,7 +16,7 @@
 		</div>
 
 		<span class="b-font-small" style="margin-top: 20px;">Identificação do pedido:</span>
-		<span class="b-font-big" style="margin-bottom: 20px">{$store_order_reference}</span>
+		<span class="b-font-big" style="margin-bottom: 20px;">{$store_order_reference}</span>
 
 	</div>
 	<div class='b-info-panel'>

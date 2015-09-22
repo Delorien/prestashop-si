@@ -342,3 +342,40 @@
   padding: 0;
   list-style-position: inside;
 }
+
+/*payment_option_erro.tpl*/
+.payment-message {
+  font-family: Arial;
+  padding: 10px;
+  background: #e3e3e3;
+  border: 1px solid #cacaca;
+}
+
+.payment-message-warning {
+  background: #FFEDC1;
+  border: 1px solid #EFE2C1;
+}
+
+.payment-message-warning .text {
+  color: #7C5F24;
+}
+
+.payment-message .text {
+  font-size: 16px;
+  margin-right: 20px;
+}
+
+.b-button-blue {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 14px 20px;
+  background: #7CA9D4;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.b-button-blue:hover {
+  background: #5699DA;
+}
+

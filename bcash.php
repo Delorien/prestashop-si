@@ -190,7 +190,7 @@ class Bcash extends PaymentModule
 				'bcash_payment_method' => $paymentMethod,
       			'bcash_transaction_id' => Tools::getValue('bcash_transaction_id'),
       			'bcash_paymentLink' => Tools::getValue('bcash_paymentLink'),
-      			'store_order_id' => Tools::getValue('id_order')
+      			'store_order_reference' => Tools::getValue('reference_order')
       		)
   		);
 

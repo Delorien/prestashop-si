@@ -33,11 +33,13 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		try {
 		    $response = $payment->create($transactionRequest);
 
+			$order = new Order($this->module->currentOrder);
+
 		    //	Redirect	on	order	confirmation	page
 			Tools::redirect('index.php?controller=order-confirmation' .
 			'&id_cart='		. $this->context->cart->id .
-			'&id_module='	. $this->module->id . 
-			'&id_order='	. $this->module->currentOrder .
+			'&id_module='	. $this->module->id .
+			'&reference_order='	. $order->reference  .
 			'&key='			. $this->context->customer->secure_key .
 			'&bcash_transaction_id='	. $response->transactionId .
 			'&bcash_paymentLink='		. $response->paymentLink .

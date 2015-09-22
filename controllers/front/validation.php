@@ -213,13 +213,6 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 	function retentativa($e)
 	{
-		$errors = $e->getErrors()->list;
-
-		$params = array(
-			'retentativa' => true,
-		    'b_errors' => $errors, 
-		);
-
 		//See ParentOrderController.php L-74
 		$oldCart = new Cart($this->context->cart->id);
 
@@ -227,8 +220,26 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		self::$cookie->id_cart = $duplication['cart']->id;
 		self::$cookie->write();
 
+		$this->cancelOrder();
+
+		$params = array(
+			'retentativa' => true,
+		    'b_errors' => $e->getErrors()->list, 
+		);
+
 		$url = $this->context->link->getModuleLink('bcash', 'payment', $params);
 
 		Tools::redirectLink($url);
+	}
+
+	function cancelOrder() {
+		$order_id = (int) $this->module->currentOrder;
+		$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));
+
+		$history = new OrderHistory();
+		$history->id_order = $order_id;
+		$history->id_order_state = $order_state_id;
+		$history->changeIdOrderState($order_state_id, $order_id);
+		$history->add(true);
 	}
 }

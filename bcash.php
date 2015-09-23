@@ -43,6 +43,10 @@ class Bcash extends PaymentModule
             return false;
         }
 
+         if (! $this->createTables()) {
+            return false;
+        }
+
 		Configuration::updateValue(self::prefix . 'TITULO', 'Bcash');
 
 		return true;
@@ -197,6 +201,26 @@ class Bcash extends PaymentModule
 		return $this->display(__FILE__, 'views/templates/hook/payment_return.tpl');
 	}
 
+ 	private function createTables()
+    {
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'bcash_historico` (
+            `id_pedido`			varchar(50),
+			`id_transacao`		int (10),
+			`id_status`			int(10),
+			`status`			varchar(30),
+			`pagamento_meio`	varchar(80),
+			`parcelas`			int(4),
+			`valor_original`	double(15,2),
+			`valor_loja`		double(15,2),
+			`taxa` 				double(15,2),
+			`date_add`			timestamp	DEFAULT CURRENT_TIMESTAMP
+            )';
+
+        if (! Db::getInstance()->Execute($sql)) {
+            return false;
+        }
+        return true;
+    }
 
 	private function generateBcashOrderStatus() 
 	{

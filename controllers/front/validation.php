@@ -64,8 +64,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$shoppingCost = number_format(Tools::ps_round($shoppingCost, 2), 2, '.', '');
 	    $transactionRequest->setShipping($shoppingCost);
 	    $transactionRequest->setDiscount($this->getCartDiscounts());
-	    $transactionRequest->setUrlReturn("https://www.bcash.com.br/loja/retorno.php");
-	    $transactionRequest->setUrlNotification("https://www.bcash.com.br/loja/aviso.php");
+	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification'));
 	    $transactionRequest->setProducts($this->createProducts());
 	    $transactionRequest->setAcceptedContract("S");
 	    $transactionRequest->setViewedContract("S");

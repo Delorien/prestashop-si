@@ -1,8 +1,10 @@
 <?php
 
 include_once dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
+include_once dirname(__FILE__).'/../../domain/History.php';
 
 use Bcash\Service\Notification;
+use Bcash\Service\Consultation;
 use Bcash\Domain\NotificationContent;
 use Bcash\Domain\NotificationStatusEnum;
 use Bcash\Exception\ValidationException;
@@ -36,6 +38,7 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 
 			if ($result) {
 				$this->updateStatus($orderId, $statusId);
+				$this->writeHistory($transactionId);
 			}
 		} catch (ValidationException $e) {
 			// PrestaShopLogger::addLog("ErroTeste: " . $e->getErrors()->limt[0], 1);
@@ -75,6 +78,37 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 		$order = new Order($orderId);
 		$total_price = number_format(Tools::ps_round($order->total_paid, 2), 2, '.', '');
 		return $total_price;
+	}
+
+	private function writeHistory($transactionId)
+	{
+		$email = Configuration::get(self::prefix . 'EMAIL');
+		$token =  Configuration::get(self::prefix . 'TOKEN');
+
+		$consultation = new Consultation($email, $token);
+		$consultation->enableSandBox(true);
+
+		try {
+		    $response = $consultation->searchByTransaction($transactionId);
+		} catch (ValidationException $e) {
+			// PrestaShopLogger::addLog("ErroTeste: ", 1);
+		} catch (ConnectionException $e) {
+			// PrestaShopLogger::addLog("ErroTeste: ", 1);
+		}
+
+		$id_pedido = $response->transacao->id_pedido;
+		$id_transacao = $transactionId;
+		$id_status = $this->getStatus($response->transacao->cod_status);
+		$status = $response->transacao->status;
+		$pagamento_meio = $response->transacao->meio_pagamento;
+		$parcelas = $response->transacao->parcelas;
+		$valor_original = $response->transacao->valor_original;
+		$valor_loja = $response->transacao->valor_loja;
+		$taxa = $valor_original - $valor_loja;
+
+		$history = new History($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio, $parcelas, $valor_original, $valor_loja, $taxa);
+
+		$history->write();
 	}
 
 }

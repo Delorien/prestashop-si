@@ -12,7 +12,7 @@ class History
 	private $valor_loja;
 	private $taxa;
 
-	public function __construct($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio, $parcelas = null, $valor_original = null, $valor_loja = null, $taxa = null)
+	public function __construct($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio, $parcelas = 1, $valor_original = null, $valor_loja = null, $taxa = null)
 	{
 		$this->id_pedido = $id_pedido;
 		$this->id_transacao = $id_transacao;

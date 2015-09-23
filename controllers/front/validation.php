@@ -70,7 +70,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		if ($this->isCard($pagamento_meio->id)) {
 			$parcelas = Tools::getValue('card-installment');
 		}else {
-			$parcelas = null;
+			$parcelas = 1;
 		}
 
 		$history = new History($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio->title, $parcelas);

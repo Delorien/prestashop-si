@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__FILE__).'/../../domain/History.php';
+include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
 include dirname(__FILE__).'/../../helper/BcashStateHelper.php';
 include dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
 include_once dirname(__FILE__).'/payment.php';
@@ -33,6 +35,8 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		try {
 		    $response = $payment->create($transactionRequest);
 
+			$this->writeHistory($response, $transactionRequest);
+
 			$order = new Order($this->module->currentOrder);
 
 		    //	Redirect	on	order	confirmation	page
@@ -51,6 +55,27 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 			$this->retentativa($e);
 		}
 
+	}
+
+	private function writeHistory($response, $transactionRequest)
+	{
+		$id_pedido = (int) $this->module->currentOrder;
+		$id_transacao = $response->transactionId;
+		$id_status = (int)(Configuration::get('PS_OS_BCASH_IN_PROGRESS'));
+		$status = urldecode($response->descriptionStatus);
+
+		$paymentMethodHelper = new PaymentMethodHelper();
+		$pagamento_meio = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
+
+		if ($this->isCard($pagamento_meio->id)) {
+			$parcelas = Tools::getValue('card-installment');
+		}else {
+			$parcelas = null;
+		}
+
+		$history = new History($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio->title, $parcelas);
+
+		$history->write();
 	}
 
 	function createTransactionRequest()
@@ -123,7 +148,6 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 			$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
 					' WHERE ' . $where . ' = ' . $this->context->customer->id;
 
-			$db = Db::getInstance();
 			$result = Db::getInstance()->getValue($sql);
 			return $result;
 		}

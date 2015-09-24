@@ -14,7 +14,7 @@ class BcashStatusHelper
 
  	private static $order_status_bcash = array(
         'IN_PROGRESS' => array(
-            'name' => 'Em andamento',
+            'name' => 'Em andamento - Bcash',
             'color' => '#00FF99',
             'send_email' => false,
             'template' => '',
@@ -27,7 +27,7 @@ class BcashStatusHelper
             'paid' => false
         ),
         'APPROVED' => array(
-            'name' => 'Aprovada',
+            'name' => 'Aprovada - Bcash',
             'color' => '#00FF99',
             'send_email' => false,
             'template' => '',
@@ -40,7 +40,7 @@ class BcashStatusHelper
             'paid' => false
         ),
         'COMPLETED' => array(
-            'name' => 'Completada',
+            'name' => 'Completada - Bcash',
             'color' => '#00FF99',
             'send_email' => false,
             'template' => '',
@@ -53,7 +53,7 @@ class BcashStatusHelper
             'paid' => true
         ),
         'IN_DISPUTE' => array(
-            'name' => 'Em disputa',
+            'name' => 'Em disputa - Bcash',
             'color' => '#FF9999',
             'send_email' => false,
             'template' => '',
@@ -66,7 +66,7 @@ class BcashStatusHelper
             'paid' => true
         ),
         'REFUNDED' => array(
-            'name' => 'Devolvida',
+            'name' => 'Devolvida - Bcash',
             'color' => '#FFCC99',
             'send_email' => false,
             'template' => '',
@@ -79,7 +79,7 @@ class BcashStatusHelper
             'paid' => false
         ),
         'CANCELLED' => array(
-            'name' => 'Cancelada',
+            'name' => 'Cancelada - Bcash',
             'color' => '#FF9999',
             'send_email' => false,
             'template' => '',
@@ -92,7 +92,7 @@ class BcashStatusHelper
             'paid' => false
         ),
 		'CHARGEBACK' => array(
-            'name' => 'Chargeback',
+            'name' => 'Chargeback - Bcash',
             'color' => '#FFCC99',
             'send_email' => false,
             'template' => '',

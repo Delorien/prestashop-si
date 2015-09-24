@@ -172,7 +172,7 @@ class Bcash extends PaymentModule
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_option.css', 'all');
 		$this->context->smarty->assign(
 			array(
-      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment')
+      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', [], true)
       		)
   		);
 

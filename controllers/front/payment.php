@@ -49,7 +49,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			            'anosVencimento' => $this->getYears(),
 
 						'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
-						'action_post' => $this->context->link->getModuleLink('bcash', 'validation')
+						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', [], true)
 					);
 
 			$erros_messages = array();
@@ -68,7 +68,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
     	}else {
 			$this->context->smarty->assign(
 				array(
-      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment')
+      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', [], true)
       			)
   			);
 

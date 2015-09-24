@@ -89,7 +89,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$shoppingCost = number_format(Tools::ps_round($shoppingCost, 2), 2, '.', '');
 	    $transactionRequest->setShipping($shoppingCost);
 	    $transactionRequest->setDiscount($this->getCartDiscounts());
-	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification'));
+	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification', [], true));
 	    $transactionRequest->setProducts($this->createProducts());
 	    $transactionRequest->setAcceptedContract("S");
 	    $transactionRequest->setViewedContract("S");
@@ -252,7 +252,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		    'b_errors' => $e->getErrors()->list, 
 		);
 
-		$url = $this->context->link->getModuleLink('bcash', 'payment', $params);
+		$url = $this->context->link->getModuleLink('bcash', 'payment', $params, [], true);
 
 		Tools::redirectLink($url);
 	}

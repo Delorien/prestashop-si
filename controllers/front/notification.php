@@ -38,12 +38,12 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 
 			if ($result) {
 				$this->updateStatus($orderId, $statusId);
-				$this->writeHistory($transactionId);
+				$this->writeHistory($orderId, $transactionId);
 			}
 		} catch (ValidationException $e) {
-			// PrestaShopLogger::addLog("ErroTeste: " . $e->getErrors()->limt[0], 1);
+			$this->logUpdateFail($orderId, $transactionId, $statusId, $e);
 		} catch (ConnectionException $e) {
-			// PrestaShopLogger::addLog("ErroTeste: " . $e->getErrors()->limt[0], 1);
+			$this->logUpdateFail($orderId, $transactionId, $statusId, $e);
 		}
 	}
 
@@ -80,7 +80,7 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 		return $total_price;
 	}
 
-	private function writeHistory($transactionId)
+	private function writeHistory($orderId, $transactionId)
 	{
 		$email = Configuration::get(self::prefix . 'EMAIL');
 		$token =  Configuration::get(self::prefix . 'TOKEN');
@@ -90,25 +90,43 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 
 		try {
 		    $response = $consultation->searchByTransaction($transactionId);
+
+			$id_pedido = $response->transacao->id_pedido;
+			$id_transacao = $transactionId;
+			$id_status = $this->getStatus($response->transacao->cod_status);
+			$status = $response->transacao->status;
+			$pagamento_meio = $response->transacao->meio_pagamento;
+			$parcelas = $response->transacao->parcelas;
+			$valor_original = $response->transacao->valor_original;
+			$valor_loja = $response->transacao->valor_loja;
+			$taxa = $valor_original - $valor_loja;
+
+			$history = new History($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio, $parcelas, $valor_original, $valor_loja, $taxa);
+			$history->write();
+
 		} catch (ValidationException $e) {
-			// PrestaShopLogger::addLog("ErroTeste: ", 1);
+			$this->logHistoryFail($orderId, $transactionId, $statusId, $e);
 		} catch (ConnectionException $e) {
-			// PrestaShopLogger::addLog("ErroTeste: ", 1);
+			$this->logHistoryFail($orderId, $transactionId, $statusId, $e);
 		}
+	}
 
-		$id_pedido = $response->transacao->id_pedido;
-		$id_transacao = $transactionId;
-		$id_status = $this->getStatus($response->transacao->cod_status);
-		$status = $response->transacao->status;
-		$pagamento_meio = $response->transacao->meio_pagamento;
-		$parcelas = $response->transacao->parcelas;
-		$valor_original = $response->transacao->valor_original;
-		$valor_loja = $response->transacao->valor_loja;
-		$taxa = $valor_original - $valor_loja;
+	private function logUpdateFail ($orderId, $transactionId, $statusId, $e) 
+	{
+		$message = "Erro ao atualizar Transação: " . $transactionId . ', Pedido: ' . $orderId . ', Status: ' . $this->getStatus($statusId);
+		if (! empty($e->getErrors()->erro->descricao)) {
+			$message .= '. Menssagem do Erro: ' . $e->getErrors()->erro->descricao;
+		}
+		PrestaShopLogger::addLog($message, 3);
+	}
 
-		$history = new History($id_pedido, $id_transacao, $id_status, $status, $pagamento_meio, $parcelas, $valor_original, $valor_loja, $taxa);
-
-		$history->write();
+	private function logHistoryFail ($orderId, $transactionId, $statusId, $e) 
+	{
+		$message = "Erro ao registrar histórico da atualizão da Transação: " . $transactionId . ', Pedido: ' . $orderId . ', Status: ' . $this->getStatus($statusId);
+		if (! empty($e->getErrors()->erro->descricao)) {
+			$message .= '. Menssagem do Erro: ' . $e->getErrors()->erro->descricao;
+		}
+		PrestaShopLogger::addLog($message, 3);
 	}
 
 }

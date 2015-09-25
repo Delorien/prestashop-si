@@ -6,6 +6,7 @@ if (! defined('_PS_VERSION_')) {
 
 include_once dirname(__FILE__).'/helper/BcashStatusHelper.php';
 include_once dirname(__FILE__).'/helper/PaymentMethodHelper.php';
+include_once dirname(__FILE__).'/domain/History.php';
 
 class Bcash extends PaymentModule
 {
@@ -34,7 +35,8 @@ class Bcash extends PaymentModule
 	{
 		if (!parent::install() ||
 			!$this->registerHook('payment') ||
-			!$this->registerHook('paymentReturn')) {
+			!$this->registerHook('paymentReturn') ||
+			!$this->registerHook('displayAdminOrder')) {
 
 			return false;
 		}
@@ -199,6 +201,33 @@ class Bcash extends PaymentModule
   		);
 
 		return $this->display(__FILE__, 'views/templates/hook/payment_return.tpl');
+	}
+
+	public function hookDisplayAdminOrder($params)
+	{
+		$order = new Order((int)Tools::getValue('id_order'));
+
+		if (!($order->payment == $this->displayName || $order->module == $this->name)) {
+			return;
+		}
+
+		$orderHistory = History::getByOrder($order->id);
+		$data = array();
+
+		if ($orderHistory) {
+			$data['b_history'] = $orderHistory;
+		}
+
+		$data['b_isSuperAdmin'] = Context::getContext()->employee->isSuperAdmin();
+
+		$this->context->smarty->assign($data);
+
+		if (Context::getContext()->employee->isSuperAdmin()) {
+			$this->context->controller->addJS($this->getPathUri() . 'resources/js/display.admin.order.cancel.js', 'all');
+		}
+
+		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/display_admin_order.css', 'all');
+		return $this->display(__FILE__, 'views/templates/hook/display_admin_order.tpl');
 	}
 
  	private function createTables()

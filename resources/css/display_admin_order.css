@@ -130,3 +130,43 @@ there's a rowspan on the first cell. Case added to the tests. issue#432 */
 #bcash .confirme .atencao {
 	text-transform: uppercase;
 }
+
+.block-load {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	background-color: #000;
+	opacity: 0.3;
+	display: none;
+}
+
+.box-return {
+	display: none;
+	margin-top: 15px;
+	border-bottom: 2px solid #831A18;
+	color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+.box-return .title {
+	margin: 0 0 15px;
+	font-weight: normal;
+}
+
+.box-return span {
+	margin: 0;
+	padding: 0;
+	list-style-position: inside;
+}
+
+.box-error {
+	background: #A9211F;
+}
+
+.box-sucess {
+	background: rgb(28, 184, 65);
+}

@@ -223,6 +223,8 @@ class Bcash extends PaymentModule
 			$data['b_id_transacao'] = $orderHistory[0]['id_transacao'];
 		}
 
+		$data['url_cancelation_ajax'] = _MODULE_DIR_ . 'bcash/ServiceCancelation.php';
+
 		$this->context->smarty->assign($data);
 
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/display_admin_order.css', 'all');

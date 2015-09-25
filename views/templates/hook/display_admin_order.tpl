@@ -66,10 +66,48 @@
 			<span>O procedimento de cancelamento é irreversível, uma vez cancelada, 
 				a transação não pode ser revertida.</span>
 			<span class="atencao" style="margin-bottom: 5px;">Tem certeza que deseja cancelar a transação?</span>
-			<a class="b-button b-button-danger">Cancelar</a>
+			<button id="cancelAjaxButton" class="b-button b-button-danger">Cancelar</button>
 			<button id="b_button_cancel_fechar" class="b-button b-button-sucess" style="margin-left: 5px;">Fechar</button>
 		</div>
 		{/if}
 
+		<div id="box-error" class="box-return box-error">
+		  <h3 class="title">Ocorreu um erro ao cancelar a transação</h3>
+			  <span id="b-error-message"></span>
+		</div>
+		<div id="box-sucess" class="box-return box-sucess">
+		  <h3 class="title">Sucesso</h3>
+			  <span>A transação foi cancelada com sucesso no Bcash! Recarregando página em 5s...</span>
+		</div>
+
 	</div>
 </div>
+
+<div class="block-load">
+</div>
+
+{if $b_isSuperAdmin && isset($b_id_transacao)}
+<script>
+	$("#cancelAjaxButton").click(function($table)
+	{
+		$('.block-load').fadeIn();
+
+		$.ajax({
+		  type: 'POST',
+		  url: '{$url_cancelation_ajax}',
+		  data: 'id_transacao=' + {$b_id_transacao},
+		  dataType: 'json',
+		  success: function(json) {
+			$('.block-load').fadeOut();
+			$('#box-sucess').show('slow');
+			setTimeout('location.reload();', 8000);
+		  },
+		  error: function (xhr, ajaxOptions, thrownError) {
+			$('.block-load').fadeOut();
+			$('#box-error').show('slow');
+			$('#b-error-message').text(xhr.responseText);
+	      }
+		});
+	});
+</script>
+{/if}

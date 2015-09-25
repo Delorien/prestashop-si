@@ -59,7 +59,7 @@
 		  {/if}
 		</table>
 
-		{if $b_isSuperAdmin}
+		{if $b_isSuperAdmin && isset($b_id_transacao)}
 		<button id="b_button_cancel" class="b-button b-button-danger">Cancelar Transação no Bcash</button>
 
 		<div class="confirme">

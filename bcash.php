@@ -214,17 +214,19 @@ class Bcash extends PaymentModule
 		$orderHistory = History::getByOrder($order->id);
 		$data = array();
 
-		if ($orderHistory) {
+		if (!empty($orderHistory)) {
 			$data['b_history'] = $orderHistory;
+			$id_transaco = $orderHistory[0]['id_transacao'];
 		}
 
 		$data['b_isSuperAdmin'] = Context::getContext()->employee->isSuperAdmin();
 
-		$this->context->smarty->assign($data);
-
-		if (Context::getContext()->employee->isSuperAdmin()) {
+		if (Context::getContext()->employee->isSuperAdmin() && !empty($id_transaco)) {
 			$this->context->controller->addJS($this->getPathUri() . 'resources/js/display.admin.order.cancel.js', 'all');
+			$data['b_id_transacao'] = $orderHistory[0]['id_transacao'];
 		}
+
+		$this->context->smarty->assign($data);
 
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/display_admin_order.css', 'all');
 		return $this->display(__FILE__, 'views/templates/hook/display_admin_order.tpl');

@@ -75,4 +75,21 @@ class History
 		$result = Db::getInstance()->Execute($sql);
 	}
 
+	static public function getByOrder($orderId)
+	{
+		if ($orderId == null){
+			return false;
+		}
+
+		$tabela = _DB_PREFIX_ . 'bcash_historico';
+
+		$sql = 'SELECT * FROM '. $tabela .
+				' WHERE id_pedido = ' . $orderId .
+				' ORDER BY date_add DESC';
+
+		$results = Db::getInstance()->ExecuteS($sql);
+
+		return $results;
+	}
+
 }

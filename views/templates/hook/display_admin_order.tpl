@@ -90,17 +90,18 @@
 <script>
 	$("#cancelAjaxButton").click(function($table)
 	{
+		var data = 'id_transacao=' + {$b_id_transacao} + '&id_pedido=' + {$b_order_id};
 		$('.block-load').fadeIn();
 
 		$.ajax({
 		  type: 'POST',
 		  url: '{$url_cancelation_ajax}',
-		  data: 'id_transacao=' + {$b_id_transacao},
+		  data: data,
 		  dataType: 'json',
 		  success: function(json) {
 			$('.block-load').fadeOut();
 			$('#box-sucess').show('slow');
-			setTimeout('location.reload();', 8000);
+			setTimeout('location.reload();', 5000);
 		  },
 		  error: function (xhr, ajaxOptions, thrownError) {
 			$('.block-load').fadeOut();

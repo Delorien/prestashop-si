@@ -11,8 +11,9 @@ $error = 'error';
 $prefix = 'BCASH_';
 
 $id_transacao = Tools::getValue('id_transacao');
+$id_pedido = Tools::getValue('id_pedido');
 
-if (empty($id_transacao)) {
+if (empty($id_transacao) || empty($id_pedido)) {
 	echo(http_response_code(404));
 	exit;
 }
@@ -25,6 +26,11 @@ $cancellation->enableSandBox(true);
 
 try {
     $response = $cancellation->execute($id_transacao);
+
+	if($response->transactionStatusId == 7) {
+		updateOrder($id_pedido);
+	}
+
 } catch (ValidationException $e) {
 	die(errorResponse($e));
 } catch (ConnectionException $e) {
@@ -41,3 +47,13 @@ function errorResponse($e)
 	}
 }
 
+function updateOrder($orderId) {
+
+	$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));;
+
+	$history = new OrderHistory();
+	$history->id_order = $orderId;
+	$history->id_order_state = $order_state_id;
+	$history->changeIdOrderState($order_state_id, $orderId);
+	$history->add(true);
+}

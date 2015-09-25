@@ -221,6 +221,7 @@ class Bcash extends PaymentModule
 		if (Context::getContext()->employee->isSuperAdmin() && !empty($id_transaco)) {
 			$this->context->controller->addJS($this->getPathUri() . 'resources/js/display.admin.order.cancel.js', 'all');
 			$data['b_id_transacao'] = $orderHistory[0]['id_transacao'];
+			$data['b_order_id'] = $order->id;
 		}
 
 		$data['url_cancelation_ajax'] = _MODULE_DIR_ . 'bcash/ServiceCancelation.php';

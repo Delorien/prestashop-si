@@ -139,9 +139,6 @@ class Bcash extends PaymentModule
 		$this->context->controller->addJS($this->getPathUri() . 'resources/js/admin-form-validator.js', 'all');
 		$this->context->smarty->assign('action_post', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 
-		$link = new Link(); 
-		_PS_BASE_URL_.__PS_BASE_URI__."testadmin/".$link->getAdminLink('AdminTest', true);
-
 		$this->context->smarty->assign(
 	        array(
 	            'titulo' => Configuration::get(self::prefix . 'TITULO'),
@@ -158,7 +155,7 @@ class Bcash extends PaymentModule
 				'where_cpf_select' => Configuration::get(self::prefix.'WHERE_CPF'),
 				'campo_fone' => Configuration::get(self::prefix.'CAMPO_FONE'),
 				'campos_fone' => array_keys(get_object_vars(new Customer())),
-				'ajax_dir' => _MODULE_DIR_ . 'bcash/ajax_tables.php'
+				'ajax_dir' => _MODULE_DIR_ . 'bcash/ServiceTables.php'
 	        )
 	    );
 

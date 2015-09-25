@@ -92,4 +92,31 @@ class History
 		return $results;
 	}
 
+	static public function getLastByOrder($orderId)
+	{
+		if ($orderId == null){
+			return false;
+		}
+
+		$tabela = _DB_PREFIX_ . 'bcash_historico';
+
+		$sql = 'SELECT * FROM '. $tabela .
+				' WHERE id_pedido = ' . $orderId .
+				' ORDER BY date_add DESC';
+
+		$results = Db::getInstance()->getRow($sql);
+
+		return $results;
+	}
+
+	static function writeNewOrderStatus($orderId, $novoStatus)
+	{
+		$oldHistory = self::getLastByOrder($orderId);
+
+		$history = new History($oldHistory['id_pedido'], $oldHistory['id_transacao'], $novoStatus['id'], $novoStatus['status'], $oldHistory['pagamento_meio'],
+					$oldHistory['parcelas'], $oldHistory['valor_original'], $oldHistory['valor_loja'], $oldHistory['taxa']);
+
+		$history->write();
+	}
+
 }

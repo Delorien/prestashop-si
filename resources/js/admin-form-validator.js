@@ -10,6 +10,16 @@ $(document).ready(function() {
 
 	}, "Formato inválido. (Ex.:10.0)");
 
+	jQuery.validator.addMethod("isTableLoad", function(value, element) {
+
+		if(	($('#tableAjax').val() != '') &&
+			($('#campo_cpf_select').val() == null)	) {
+			return false;
+		}
+		return true;
+
+	}, "Selecione a tabela e o campo para usar como cpf.");
+
 	$("#adminform").validate({
 		ignoreTitle: true,
 		rules : {
@@ -41,7 +51,8 @@ $(document).ready(function() {
 				required : true
 			},
 			tableAjax : {
-				required : true
+				required : true,
+				isTableLoad : true
 			}
 		},
 		messages : {
@@ -64,6 +75,11 @@ $(document).ready(function() {
 			tableAjax : {
 				required : "Selecione a tabela e o campo para usar como cpf."
 			}
+		},
+		errorPlacement: function(error, element) {
+		    if (element.attr("name") == "tableAjax" ) {
+		        error.insertAfter(".table-search");
+	       }
 		}
 	});
 

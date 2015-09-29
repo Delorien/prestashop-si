@@ -114,9 +114,15 @@ class Bcash extends PaymentModule
 				$campo_cpf_select = strval(Tools::getValue('campo_cpf_select'));
 				$table_cpf = strval(Tools::getValue('tableAjax'));
 				$where_cpf = strval(Tools::getValue('where_cpf_select'));
-				Configuration::updateValue(self::prefix . 'CAMPO_CPF_SELECT', $campo_cpf_select);
-				Configuration::updateValue(self::prefix . 'TABLE_CPF', $table_cpf);
-				Configuration::updateValue(self::prefix . 'WHERE_CPF', $where_cpf);
+				if (!empty($campo_cpf_select)) {
+					Configuration::updateValue(self::prefix . 'CAMPO_CPF_SELECT', $campo_cpf_select);
+				}
+				if (!empty($table_cpf)) {
+					Configuration::updateValue(self::prefix . 'TABLE_CPF', $table_cpf);
+				}
+				if (!empty($where_cpf)) {
+					Configuration::updateValue(self::prefix . 'WHERE_CPF', $where_cpf);
+				}
 			}
 
 			if (!empty($sandbox)) {

@@ -67,35 +67,10 @@ $(document).ready(function() {
 	});
 
 	$('#b-form-checkout').submit(function() {
-
 		if($("#b-form-checkout").valid()) {
 			$('.block-load').fadeIn();
 			$('input:submit').attr("disabled", true);
 		}
-
-		// $('.block-load').fadeOut();
 	});
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

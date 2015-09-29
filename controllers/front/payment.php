@@ -22,6 +22,10 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
   	{
 	   	parent::initContent();
 
+		if (empty($this->context->cart->id)) {
+			Tools::redirect('index.php?controller=order&step=1');
+		}
+
 		$installments = $this->getInstallments();
 
 		if(!$installments === false) {

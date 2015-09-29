@@ -21,6 +21,16 @@ $(document).ready(function() {
 		});
 	};
 
+	function resetAllFields() {
+		$('#card-data').find('input:text').val('');
+		$('#card-data').find('input:radio').attr('checked', false);
+		$('#validade_ano_cartao').prop('selectedIndex',0);
+		$('#validade_mes_cartao').prop('selectedIndex',0);
+
+		var validator = $( "#b-form-checkout" ).validate();
+		validator.resetForm();
+	};
+
 	function showCardForm(radio) {
 		if ($('#' + radio.id, '#credit_list').length == 1) {
 
@@ -37,6 +47,8 @@ $(document).ready(function() {
 
 		} else {
 			$('#card-data').hide('slow');
+
+			resetAllFields();
 
 			if ($('#' + radio.id, '#tef_list').length == 1) {
 				$('.b-button-sucess').hide('fast');

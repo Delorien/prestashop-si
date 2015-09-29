@@ -84,7 +84,11 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
         parent::setMedia();
         // Add you CSS and JS, 
         $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'bcash/resources/css/bcash_payment.css', 'all');
+		$this->context->controller->addCSS(_PS_MODULE_DIR_ . 'bcash/resources/css/progress_bar.css', 'all');
+        $this->context->controller->addJS(_PS_MODULE_DIR_ . 'bcash/resources/js/jquery.validate.min.js', 'all');
+		$this->context->controller->addJS(_PS_MODULE_DIR_ . 'bcash/resources/js/payment-form-validator.js');
         $this->context->controller->addJS(_PS_MODULE_DIR_ . 'bcash/resources/js/bcash_payment.js');
+		$this->context->controller->addJS(_PS_MODULE_DIR_ . 'bcash/resources/js/progress_bar.js');
     }
 
 	private function getMonths() {

@@ -78,8 +78,10 @@ $(document).ready(function() {
 		},
 		errorPlacement: function(error, element) {
 		    if (element.attr("name") == "tableAjax" ) {
-		        error.insertAfter(".table-search");
-	       }
+		    	error.insertAfter(".table-search");
+	       } else {
+	       	error.insertAfter(element);
+	      }
 		}
 	});
 

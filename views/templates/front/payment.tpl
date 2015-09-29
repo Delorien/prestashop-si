@@ -17,7 +17,7 @@
 	</div>
 	{/if}
 
-	<form action="{$action_post|escape:'html'}" method="post">
+	<form id="b-form-checkout" action="{$action_post|escape:'html'}" method="post">
 
 		{if $campo_cpf == 'exibir'}
 			<h3>Seus Dados</h3>
@@ -49,8 +49,8 @@
 
 			<!-- card form -->
 			<div id="card-data" class="b-form-horizontal" style="display:none;">
-				<h4>Parcelamentos</h4>
-				{foreach from=$cardsInstallments item=cardInstallments}					
+				<h4 class="parcelamentosCartao">Parcelamentos</h4>
+				{foreach from=$cardsInstallments item=cardInstallments}
 				<div class="card-installments" id="card-installment-{$cardInstallments->id}" style="display:none;">
 
 					<div class="coluna-com-6">
@@ -81,7 +81,7 @@
 					<input name="card-number" type="text" />
 				</div>
 
-				<div class="b-form-group">
+				<div id="validadeCartao" class="b-form-group">
 					<label>Validade</label>
 
 					<select name="validade_mes_cartao" id="validade_mes_cartao">
@@ -174,4 +174,13 @@
 		</div>
 
 	</form>
+</div>
+
+<div class="block-load">
+	<div class="loader">
+	  <div class="title">Por favor aguarde enquanto o pagamento é processado.</div>
+	  <div class="load">
+	    <div class="bar"></div>
+	  </div>
+	</div>
 </div>

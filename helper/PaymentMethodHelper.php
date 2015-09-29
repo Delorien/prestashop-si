@@ -75,4 +75,29 @@ class PaymentMethodHelper
 			self::ONLINE_TRANSFER_TYPE => self::$onlineTransfer
 		);
 	}
+
+	static public function isCard($paymentMethod) 
+	{
+		if($paymentMethod->type == self::CARD_TYPE){
+			return true;
+		}
+		return false;
+	}
+
+	static public function isTEF($paymentMethod) 
+	{
+		if($paymentMethod->type == self::ONLINE_TRANSFER_TYPE){
+			return true;
+		}
+		return false;
+	}
+
+	static public function isBankSlip($paymentMethod) 
+	{
+		if($paymentMethod->type == self::BANKSLIP_TYPE){
+			return true;
+		}
+		return false;
+	}
+
 }

@@ -2,6 +2,7 @@
 
 include_once dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
 include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
+include_once dirname(__FILE__).'/../../helper/FormatHelper.php';
 
 use Bcash\Service\Installments;
 use Bcash\Exception\ValidationException;
@@ -34,16 +35,23 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			$TEFsInstallments = $this->getTEFSInstallments($installments->paymentTypes);
 			$bankSlipsInstallments = $this->getBankSlipInstallments($installments->paymentTypes);
 
+			$cardsAmounts = $this->getAmounts($cardsInstallments, Configuration::get(self::prefix . 'DESCONTO_CREDITO'));
+			$TEFsAmounts = $this->getAmounts($TEFsInstallments, Configuration::get(self::prefix . 'DESCONTO_TEF'));
+			$bankSlipsAmounts = $this->getAmounts($bankSlipsInstallments, Configuration::get(self::prefix . 'DESCONTO_BOLETO'));
+
 			$data = array(
 			            'cards' => $cards,
 			            'cardsInstallments' => $cardsInstallments,
-			            'cardsAmount' => number_format(Tools::ps_round($cardsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+			            'cardsAmount' => $cardsAmounts['price'],
+			            'cardsNoDiscount' => $cardsAmounts['nodiscount'],
 
 			            'tefs' => $tefs,
-			            'tefsAmount' => number_format(Tools::ps_round($TEFsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+			            'tefsAmount' => $TEFsAmounts['price'],
+			            'tefsNoDiscount' => $TEFsAmounts['nodiscount'],
 
 			            'bankSlips' => $bankSlips,
-			            'bankSlipsAmount' => number_format(Tools::ps_round($bankSlipsInstallments[0]->installments[0]->amount, 2), 2, '.', ''),
+			            'bankSlipsAmount' => $bankSlipsAmounts['price'],
+			            'bankSlipsNoDiscount' => $bankSlipsAmounts['nodiscount'],
 
 			            'mesesVencimento' => $this->getMonths(),
 			            'anosVencimento' => $this->getYears(),
@@ -76,6 +84,25 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
     	}
 
   	}
+
+	private function getAmounts($paymentOption, $discount)
+	{
+		$price = FormatHelper::monetize($paymentOption[0]->installments[0]->amount);
+		$amounts = array('nodiscount' => null, 'price' => $price);
+
+		if (!empty($discount)) {
+			$amounts['nodiscount'] = $price;
+			$amounts['price'] = $this->applyDiscount($price, $discount);
+		}
+
+		return $amounts;
+	}
+
+	private function applyDiscount($price, $discount)
+	{
+		$newPrice = $price - FormatHelper::monetize((($price * $discount) / 100));
+		return FormatHelper::monetize($newPrice);
+	}
 
 	/**
      * Set default medias for this controller
@@ -124,7 +151,6 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		} catch (ConnectionException $e) {
 		 	return $this->retryInstallments();
 		}
-
 		return $response;
 	}
 
@@ -142,7 +168,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	{
 		foreach ($installments as $key => $value) {
 			if($value->name == "card"){
-				return $value->paymentMethods;
+				return $this->formatInstallments($value->paymentMethods);
 			}
 		}
 	}
@@ -151,7 +177,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	{
 		foreach ($installments as $key => $value) {
 			if($value->name == "transferencia"){
-				return $value->paymentMethods;
+				return $this->formatInstallments($value->paymentMethods);
 			}
 		}
 	}
@@ -160,9 +186,18 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	{
 		foreach ($installments as $key => $value) {
 			if($value->name == "boleto"){
-				return $value->paymentMethods;
+				return $this->formatInstallments($value->paymentMethods);
 			}
 		}
+	}
+
+	private function formatInstallments($paymentMethods) {
+		foreach ($paymentMethods as $paymentMethod) {
+			foreach ($paymentMethod->installments as $installment) {
+				$installment->amount = FormatHelper::monetize($installment->amount);
+			}
+		}
+		return $paymentMethods;
 	}
 
 }

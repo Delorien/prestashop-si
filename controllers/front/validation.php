@@ -2,6 +2,7 @@
 
 include_once dirname(__FILE__).'/../../domain/History.php';
 include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
+include_once dirname(__FILE__).'/../../helper/FormatHelper.php';
 include dirname(__FILE__).'/../../helper/BcashStateHelper.php';
 include dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
 include_once dirname(__FILE__).'/payment.php';
@@ -67,7 +68,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$paymentMethodHelper = new PaymentMethodHelper();
 		$pagamento_meio = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
 
-		if ($this->isCard($pagamento_meio->id)) {
+		if (PaymentMethodHelper::isCard($pagamento_meio)) {
 			$parcelas = Tools::getValue('card-installment');
 		}else {
 			$parcelas = 1;
@@ -78,7 +79,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$history->write();
 	}
 
-	function createTransactionRequest()
+	private function createTransactionRequest()
 	{
 	    $transactionRequest = new Bcash\Domain\TransactionRequest();
 
@@ -86,17 +87,18 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    $transactionRequest->setOrderId($this->createOrder());
 	    $transactionRequest->setBuyer($this->createBuyer());
 		$shoppingCost = $this->context->cart->getTotalShippingCost();
-		$shoppingCost = number_format(Tools::ps_round($shoppingCost, 2), 2, '.', '');
+		$shoppingCost = FormatHelper::monetize($shoppingCost);
 	    $transactionRequest->setShipping($shoppingCost);
-	    $transactionRequest->setDiscount($this->getCartDiscounts());
+	    $transactionRequest->setDiscount($this->calculateDiscounts());
 	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification', [], true));
 	    $transactionRequest->setProducts($this->createProducts());
 	    $transactionRequest->setAcceptedContract("S");
 	    $transactionRequest->setViewedContract("S");
 
-		$paymentMethod = Tools::getValue('payment-method');
-		$transactionRequest->setPaymentMethod($paymentMethod);
-		if ($this->isCard($paymentMethod)) {
+		$paymentMethodHelper = new PaymentMethodHelper();
+		$paymentMethod = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
+		$transactionRequest->setPaymentMethod($paymentMethod->id);
+		if (PaymentMethodHelper::isCard($paymentMethod)) {
 			$transactionRequest->setInstallments(Tools::getValue('card-installment'));
 			$transactionRequest->setCreditCard($this->createCreditCard());
 		}
@@ -121,7 +123,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
         return $this->module->currentOrder;
     }
 
-	function createBuyer()
+	private function createBuyer()
 	{
 		$buyer = $this->context->customer;
 
@@ -136,7 +138,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    return $customer;
 	}
 
-	function getCPF() 
+	private function getCPF() 
 	{
 		if ( Configuration::get(self::prefix.'CAMPO_CPF') == 'exibir' ) {
 			return Tools::getValue('bcash_cpf');
@@ -153,7 +155,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		}
 	}
 
-	function getTel() 
+	private function getTel() 
 	{
 		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
 
@@ -183,7 +185,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    return $address;
 	}
 
-	function createProducts()
+	private function createProducts()
 	{
 		$cartProducts = $this->context->cart->getProducts();
 		$products = array();
@@ -193,12 +195,31 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		    $bcashProduct->setCode($product["id_product"]);
 			$bcashProduct->setDescription($product["name"]);
 		    $bcashProduct->setAmount($product["cart_quantity"]);
-			$productCost = number_format(Tools::ps_round($product["price_wt"], 2), 2, '.', '');
+			$productCost = FormatHelper::monetize($product["price_wt"]);
 		    $bcashProduct->setValue($productCost);
 			array_push($products, $bcashProduct);
 		}
 
 	    return $products;
+	}
+
+	private function calculateDiscounts()
+	{
+		$totalDiscouts = $this->getCartDiscounts();
+
+		$paymentMethodHelper = new PaymentMethodHelper();
+		$payment_method = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
+		$price = $this->context->cart->getOrderTotal(true, Cart::BOTH);
+
+		if (PaymentMethodHelper::isCard($payment_method) && (Tools::getValue('card-installment') == 1)) {
+			$totalDiscouts += $this->applyDiscount($price, Configuration::get(self::prefix . 'DESCONTO_CREDITO'));
+		} else if (PaymentMethodHelper::isTEF($payment_method)) {
+			$totalDiscouts += $this->applyDiscount($price, Configuration::get(self::prefix . 'DESCONTO_TEF'));
+		} else if (PaymentMethodHelper::isBankSlip($payment_method)){
+			$totalDiscouts += $this->applyDiscount($price, Configuration::get(self::prefix . 'DESCONTO_BOLETO'));
+		}
+
+		return $totalDiscouts;
 	}
 
 	private function getCartDiscounts()
@@ -213,18 +234,20 @@ class BcashValidationModuleFrontController extends ModuleFrontController
             }
         }
 
-        return number_format(Tools::ps_round($totalDiscouts, 2), 2, '.', '');
+        return FormatHelper::monetize($totalDiscouts);
     }
 
-	private function isCard($paymentMethod) 
+    private function applyDiscount($price, $discount)
 	{
-		if( in_array($paymentMethod, array(1, 2, 37, 45, 55, 56, 63)) ){
-			return true;
+		$amount = (float) 0;
+
+		if (!empty($discount)) {
+			$amount = (($price * $discount) / 100);
 		}
-		return false;
+		return FormatHelper::monetize($amount);
 	}
 
-	function createCreditCard()
+	private function createCreditCard()
 	{
 	    $creditCard = new Bcash\Domain\CreditCard();
 	    $creditCard->setHolder(Tools::getValue('card-owner-name'));
@@ -236,7 +259,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	}
 
 
-	function retentativa($e)
+	private function retentativa($e)
 	{
 		//See ParentOrderController.php L-74
 		$oldCart = new Cart($this->context->cart->id);
@@ -257,7 +280,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		Tools::redirectLink($url);
 	}
 
-	function cancelOrder() {
+	private function cancelOrder() {
 		$order_id = (int) $this->module->currentOrder;
 		$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));
 

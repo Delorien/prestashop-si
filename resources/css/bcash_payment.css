@@ -324,6 +324,22 @@
 	margin-bottom: 15px;
 }
 
+#bcash .b-amount span {
+	font-size: 16px;
+	vertical-align: bottom;
+    font-weight: normal;
+}
+
+#bcash .b-no-discount {
+	font-size: 15px;
+	color: #999;
+	margin-bottom: 10px;
+}
+
+#bcash .b-no-discount span {
+	text-decoration: line-through;
+}
+
 .box-error {
   background: #A9211F;
   border-bottom: 2px solid #831A18;

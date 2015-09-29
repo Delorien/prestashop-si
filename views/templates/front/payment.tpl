@@ -54,14 +54,23 @@
 				<div class="card-installments" id="card-installment-{$cardInstallments->id}" style="display:none;">
 
 					<div class="coluna-com-6">
-					{foreach from=$cardInstallments->installments item=installment}
+					{foreach from=$cardInstallments->installments item=installment name=installfor}
 
+						{if $smarty.foreach.installfor.first}
 						<label class="installment-option" for="card-installment-{$cardInstallments->id}-{$installment->number}">
 							<input id="card-installment-{$cardInstallments->id}-{$installment->number}" name="card-installment" class="noUniform" type="radio" value="{$installment->number}"/>
 						 	<span>
-						 		<span>{$installment->number}X </span>R$ {$installment->amount}
+						 		<span>{$installment->number}X </span>R$ {$cardsAmount}
 						 	</span>
 						</label>
+						{else}
+						<label class="installment-option" for="card-installment-{$cardInstallments->id}-{$installment->number}">
+							<input id="card-installment-{$cardInstallments->id}-{$installment->number}" name="card-installment" class="noUniform" type="radio" value="{$installment->number}"/>
+						 	<span>
+						 		<span>{$installment->number}X </span>R$ {$installment->installmentAmount}
+						 	</span>
+						</label>
+						{/if}
 
 						{if $installment@iteration is div by 6}
 							</div>
@@ -112,8 +121,17 @@
 			</div>
 			<!-- card form -->
 
+			{if $cardsNoDiscount != null} 
+			<div class="b-no-discount">
+				De: <span>R$ {$cardsNoDiscount}</span>
+			</div>
+			{/if}
+
 			<div class="b-amount">
 				R$ {$cardsAmount}
+				{if $cardsNoDiscount != null}
+				<span>(à vista)</span>
+				{/if}
 			</div>
 
 			<input id="b-button-sucess-credit" class="b-button b-button-sucess" name="btn_submit" type="submit" value="Finalizar Pagamento" />
@@ -137,6 +155,12 @@
 				</li>
 				{/foreach}
 			</ul>
+
+			{if $tefsNoDiscount != null} 
+			<div class="b-no-discount">
+				De: <span>R$ {$tefsNoDiscount}</span>
+			</div>
+			{/if}
 
 			<div class="b-amount">
 				R$ {$tefsAmount}
@@ -162,6 +186,12 @@
 				</li>
 				{/foreach}
 			</ul>
+
+			{if $bankSlipsNoDiscount != null}
+			<div class="b-no-discount">
+				De: <span>R$ {$bankSlipsNoDiscount}</span>
+			</div>
+			{/if}
 
 			<div class="b-amount">
 				R$ {$bankSlipsAmount}

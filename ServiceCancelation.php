@@ -23,7 +23,7 @@ $email = Configuration::get($prefix . 'EMAIL');
 $token =  Configuration::get($prefix . 'TOKEN');
 
 $cancellation = new Cancellation($email, $token);
-$cancellation->enableSandBox(true);
+$cancellation->enableSandBox(Configuration::get($prefix . 'SANDBOX'));
 
 try {
     $response = $cancellation->execute($id_transacao);

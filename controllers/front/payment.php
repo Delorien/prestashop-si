@@ -143,7 +143,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		$amount = $this->context->cart->getOrderTotal(true, Cart::BOTH);
 
 		$installments = new Installments($email, $token);
-		$installments->enableSandBox(true);
+		$installments->enableSandBox(Configuration::get(self::prefix . 'SANDBOX'));
 
 		$response = null;
 

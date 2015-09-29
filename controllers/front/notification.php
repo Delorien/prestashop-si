@@ -29,7 +29,7 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 
 		$notificationContent = new NotificationContent($transactionId, $orderId, $statusId);
 		$notification = new Notification($email, $token, $notificationContent);
-		$notification->enableSandBox(true);
+		$notification->enableSandBox(Configuration::get($prefix . 'SANDBOX'));
 
 		$transactionValue = $this->getOrderValue($orderId);
 
@@ -86,7 +86,7 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 		$token =  Configuration::get(self::prefix . 'TOKEN');
 
 		$consultation = new Consultation($email, $token);
-		$consultation->enableSandBox(true);
+		$consultation->enableSandBox(Configuration::get($prefix . 'SANDBOX'));
 
 		try {
 		    $response = $consultation->searchByTransaction($transactionId);

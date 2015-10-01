@@ -31,12 +31,12 @@
 		{/if}
 
 		<h3>Selecione a Forma de Pagamento</h3>
-
+{if ($cardsInstallments != false)}
 		<div class="forma-pagamento">
 			<h4>Cartão de Crédito</h4>
 
 			<ul id="credit_list">
-				{foreach from=$cards item=card}
+				{foreach from=$cardsInstallments item=card}
 				<li>
 
 					<label class="bandeira band-{$card->id}" for="payment-method-{$card->id}">
@@ -139,13 +139,14 @@
 				Ao prosseguir o pagamento você concorda com o <a target="_blank" href="https://www.bcash.com.br/checkout/pay/contrato">Contrato de Gestão de Pagamentos</a>
 			</p>
 		</div>
+{/if}
 
-
+{if ($tefsInstallments != false)}
 		<div class="forma-pagamento">
 			<h4>Transferência Bancária</h4>
 
 			<ul id="tef_list">
-				{foreach from=$tefs item=tef}
+				{foreach from=$tefsInstallments item=tef}
 				<li>
 
 					<label class="bandeira band-{$tef->id}" for="payment-method-{$tef->id}">
@@ -171,12 +172,14 @@
 				Ao prosseguir o pagamento você concorda com o <a target="_blank" href="https://www.bcash.com.br/checkout/pay/contrato">Contrato de Gestão de Pagamentos</a>
 			</p>
 		</div>
+{/if}
 
+{if ($bankSlipsInstallments != false)}
 		<div class="forma-pagamento">
 			<h4>Boleto Bancário</h4>
 
 			<ul id="bankslip_list">
-				{foreach from=$bankSlips item=bankSlip}
+				{foreach from=$bankSlipsInstallments item=bankSlip}
 				<li>
 
 					<label class="bandeira band-{$bankSlip->id}" for="payment-method-{$bankSlip->id}">
@@ -202,7 +205,7 @@
 				Ao prosseguir o pagamento você concorda com o <a target="_blank" href="https://www.bcash.com.br/checkout/pay/contrato">Contrato de Gestão de Pagamentos</a>
 			</p>
 		</div>
-
+{/if}
 	</form>
 </div>
 

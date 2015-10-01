@@ -30,30 +30,34 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 
 		if(!$installments === false) {
 
-			$paymentMethodHelper = new PaymentMethodHelper();
-			$cards = $paymentMethodHelper->getPaymentMethods()['CARD'];
-			$tefs = $paymentMethodHelper->getPaymentMethods()['ONLINE_TRANSFER'];
-			$bankSlips = $paymentMethodHelper->getPaymentMethods()['BANKSLIP'];
-
 			$cardsInstallments = $this->getCardInstallments($installments->paymentTypes);
 			$TEFsInstallments = $this->getTEFSInstallments($installments->paymentTypes);
 			$bankSlipsInstallments = $this->getBankSlipInstallments($installments->paymentTypes);
 
-			$cardsAmounts = $this->getAmounts($cardsInstallments, Configuration::get(self::prefix . 'DESCONTO_CREDITO'));
-			$TEFsAmounts = $this->getAmounts($TEFsInstallments, Configuration::get(self::prefix . 'DESCONTO_TEF'));
-			$bankSlipsAmounts = $this->getAmounts($bankSlipsInstallments, Configuration::get(self::prefix . 'DESCONTO_BOLETO'));
+			$cardsAmounts = null;
+			$TEFsAmounts = null;
+			$bankSlipsAmounts = null;
+
+			if (!empty($cardsInstallments)) {
+				$cardsAmounts = $this->getAmounts($cardsInstallments, Configuration::get(self::prefix . 'DESCONTO_CREDITO'));
+			}
+			if (!empty($TEFsInstallments)) {
+				$TEFsAmounts = $this->getAmounts($TEFsInstallments, Configuration::get(self::prefix . 'DESCONTO_TEF'));
+			}
+			if (!empty($bankSlipsInstallments)) {
+				$bankSlipsAmounts = $this->getAmounts($bankSlipsInstallments, Configuration::get(self::prefix . 'DESCONTO_BOLETO'));
+			}
 
 			$data = array(
-			            'cards' => $cards,
 			            'cardsInstallments' => $cardsInstallments,
 			            'cardsAmount' => $cardsAmounts['price'],
 			            'cardsNoDiscount' => $cardsAmounts['nodiscount'],
 
-			            'tefs' => $tefs,
+			            'tefsInstallments' => $TEFsInstallments,
 			            'tefsAmount' => $TEFsAmounts['price'],
 			            'tefsNoDiscount' => $TEFsAmounts['nodiscount'],
 
-			            'bankSlips' => $bankSlips,
+			            'bankSlipsInstallments' => $bankSlipsInstallments,
 			            'bankSlipsAmount' => $bankSlipsAmounts['price'],
 			            'bankSlipsNoDiscount' => $bankSlipsAmounts['nodiscount'],
 

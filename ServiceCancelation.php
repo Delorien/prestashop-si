@@ -44,6 +44,8 @@ exit;
 
 function errorResponse($e)
 {
+	$erros = $e->getErrors();
+
 	if(!empty($e->getErrors())) {
 		return ($e->getErrors()->list[0]->description);
 	}

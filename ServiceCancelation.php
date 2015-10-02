@@ -46,7 +46,7 @@ function errorResponse($e)
 {
 	$erros = $e->getErrors();
 
-	if(!empty($e->getErrors())) {
+	if(!empty($erros)) {
 		return ($e->getErrors()->list[0]->description);
 	}
 }

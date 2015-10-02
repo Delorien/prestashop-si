@@ -19,6 +19,8 @@ class Bcash extends PaymentModule
 	    $this->version = '1.0.0';
 	    $this->author = 'Bcash Dev Team';
 	    $this->need_instance = 0;
+		$this->currencies = true;
+		$this->currencies_mode = 'checkbox';
 	    $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_); 
 	    $this->bootstrap = true;
 

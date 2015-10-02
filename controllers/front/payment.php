@@ -176,7 +176,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	{
 		foreach ($installments as $key => $value) {
 			if($value->name == "card"){
-				return $this->formatInstallments($value->paymentMethods);
+				return $this->formatInstallments($value->paymentMethods, true);
 			}
 		}
 	}
@@ -199,10 +199,13 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		}
 	}
 
-	private function formatInstallments($paymentMethods) {
+	private function formatInstallments($paymentMethods, $installmentAmount = false) {
 		foreach ($paymentMethods as $paymentMethod) {
 			foreach ($paymentMethod->installments as $installment) {
 				$installment->amount = FormatHelper::monetize($installment->amount);
+				if ($installmentAmount) {
+					$installment->installmentAmount = FormatHelper::monetize($installment->installmentAmount);
+				}
 			}
 		}
 		return $paymentMethods;

@@ -140,7 +140,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 	private function getCPF() 
 	{
-		if ( Configuration::get(self::prefix.'CAMPO_CPF') == 'exibir' ) {
+		if ( Tools::getValue('bcash_cpf') ) {
 			return Tools::getValue('bcash_cpf');
 		}else {
 			$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_CPF');

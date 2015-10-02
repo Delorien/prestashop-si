@@ -64,7 +64,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			            'mesesVencimento' => $this->getMonths(),
 			            'anosVencimento' => $this->getYears(),
 
-						'campo_cpf' => Configuration::get(self::prefix . 'CAMPO_CPF'),
+						'campo_cpf' => $this->getCpfMode(),
 						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', [], true)
 					);
 
@@ -92,6 +92,29 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
     	}
 
   	}
+
+	private function getCpfMode()
+	{
+		$campoCPF = Configuration::get(self::prefix . 'CAMPO_CPF');
+
+		if ( ($campoCPF != 'exibir') && ($this->isCpfOnBase()) ) {
+			return 'specified';
+		}
+
+		return 'exibir';
+	}
+
+	private function isCpfOnBase() 
+	{
+		$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_CPF');
+		$coluna = Configuration::get(self::prefix.'CAMPO_CPF_SELECT');
+		$where = Configuration::get(self::prefix.'WHERE_CPF');
+
+		$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
+				' WHERE ' . $where . ' = ' . $this->context->customer->id;
+		$result = Db::getInstance()->getValue($sql);
+		return $result;
+	}
 
 	private function getAmounts($paymentOption, $discount)
 	{

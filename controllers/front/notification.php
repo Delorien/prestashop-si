@@ -49,7 +49,11 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 
 	private function updateStatus($orderId, $statusId)
 	{
-		$order_state_id = $this->getStatus($statusId);
+		if ($statusId == 6 || $statusId == 7) {
+			$order_state_id = 6;
+		} else {
+			$order_state_id = $this->getStatus($statusId);
+		}
 
 		$history = new OrderHistory();
 		$history->id_order = $orderId;

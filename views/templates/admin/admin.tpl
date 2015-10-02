@@ -86,7 +86,7 @@
 				</div>
 			</div>
 		</div>
-
+		
 		<div class="b-form-group">
 			<label for="directPayment">
 				{if $directPayment == 1}

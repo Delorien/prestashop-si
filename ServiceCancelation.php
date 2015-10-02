@@ -53,11 +53,12 @@ function errorResponse($e)
 
 function updateOrder($orderId, $response) {
 
-	$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));
+	$order_state_id = 6;
+	/*$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));
 
 	if ($response->transactionStatusId == 6) {
 		$order_state_id = (int)(Configuration::get('PS_OS_BCASH_REFUNDED'));
-	}
+	}*/
 
 	$history = new OrderHistory();
 	$history->id_order = $orderId;

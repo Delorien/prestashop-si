@@ -191,7 +191,7 @@ class Bcash extends PaymentModule
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_option.css', 'all');
 		$this->context->smarty->assign(
 			array(
-      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', [], true)
+      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', array(), true)
       		)
   		);
 
@@ -291,7 +291,8 @@ class Bcash extends PaymentModule
 			$order_state->paid = $statusBcash['paid'];
 
 			foreach (Language::getLanguages() as $language) {
-				$order_state->name[(int) $language['id_lang']] = $statusBcash['name'];
+				$lang = (int) $language['id_lang']; 
+				$order_state->name[$lang] = $statusBcash['name'];
 			}
 
 	        if ($order_state->add()) {//save new order status

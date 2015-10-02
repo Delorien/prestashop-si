@@ -65,7 +65,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			            'anosVencimento' => $this->getYears(),
 
 						'campo_cpf' => $this->getCpfMode(),
-						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', [], true)
+						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', array(), true)
 					);
 
 			$erros_messages = array();
@@ -84,7 +84,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
     	}else {
 			$this->context->smarty->assign(
 				array(
-      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', [], true)
+      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', array(), true)
       			)
   			);
 
@@ -115,6 +115,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		$result = Db::getInstance()->getValue($sql);
 		return $result;
 	}
+
 
 	private function getAmounts($paymentOption, $discount)
 	{

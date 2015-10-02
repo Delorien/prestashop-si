@@ -88,6 +88,16 @@
 		</div>
 
 		<div class="b-form-group">
+			<label for="directPayment">
+				{if $directPayment == 1}
+					<input name="directPayment" checked id="directPayment" type="checkbox" value="{$directPayment}" title="Selecionar automaticamente o Bcash para pagamento. Funciona apenas para o checkout clássico (5 passos)." />
+				{else}
+    				<input name="directPayment" id="directPayment" type="checkbox" value="{$directPayment}" title="Selecionar automaticamente o Bcash para pagamento. Funciona apenas para o checkout clássico (5 passos)." />
+				{/if}
+				Habilitar seleção automática de pagamento pelo Bcash. </label>
+		</div>
+
+		<div class="b-form-group">
 			<label for="sandbox">
 				{if $sandbox == 1}
 					<input name="sandbox" checked id="sandbox" type="checkbox" value="{$sandbox}" title="Permite o módulo operar com o ambiente de testes (SandBox) do Bcash. Deve ser desabilitado após o período de desenvolvimento e integração." />				

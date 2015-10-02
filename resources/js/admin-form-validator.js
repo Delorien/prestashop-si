@@ -118,6 +118,14 @@ $(document).ready(function() {
 	          $(this).val('FALSE');
 	     }
 	});
+	
+	$('input[name=directPayment]').change(function(){
+	     if($(this).attr('checked')){
+	          $(this).val('TRUE');
+	     }else{
+	          $(this).val('FALSE');
+	     }
+	});
 
 	$('input[name=campo_cpf]').change(function(){
 	    var value = $( this ).val();

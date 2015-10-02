@@ -89,6 +89,7 @@ class Bcash extends PaymentModule
 			$desconto_credito = strval(Tools::getValue('desconto_credito'));
 			$campo_cpf = strval(Tools::getValue('campo_cpf'));
 			$campo_fone = strval(Tools::getValue('campo_fone'));
+			$directPayment = strval(Tools::getValue('directPayment'));
 			$sandbox = strval(Tools::getValue('sandbox'));
 
 	    	if (!empty($titulo)) {
@@ -125,6 +126,12 @@ class Bcash extends PaymentModule
 				}
 			}
 
+			if (!empty($directPayment)) {
+        	    Configuration::updateValue(self::prefix . 'DIRECT_PAYMENT', 1);
+			} else {
+				Configuration::updateValue(self::prefix . 'DIRECT_PAYMENT', 0);
+			}
+
 			if (!empty($sandbox)) {
         	    Configuration::updateValue(self::prefix . 'SANDBOX', 1);
 			} else {
@@ -154,6 +161,7 @@ class Bcash extends PaymentModule
 				'desconto_boleto' => Configuration::get(self::prefix.'DESCONTO_BOLETO'),
 				'desconto_tef' => Configuration::get(self::prefix.'DESCONTO_TEF'),
 				'desconto_credito' => Configuration::get(self::prefix.'DESCONTO_CREDITO'),
+				'directPayment' => Configuration::get(self::prefix.'DIRECT_PAYMENT'),
 				'sandbox' => Configuration::get(self::prefix.'SANDBOX'),
 				'campo_cpf' => Configuration::get(self::prefix.'CAMPO_CPF'),
 				'table_cpf' => Configuration::get(self::prefix.'TABLE_CPF'),
@@ -173,6 +181,10 @@ class Bcash extends PaymentModule
         if (!$this->active) {
             return;
         }
+
+		if ( Configuration::get(self::prefix.'DIRECT_PAYMENT') && (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0) ) {
+			Tools::redirect($this->context->link->getModuleLink('bcash', 'payment', array(), true));
+		}
 
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_option.css', 'all');
 		$this->context->smarty->assign(

@@ -73,7 +73,7 @@ class Notification implements IEnvironmentManager
 
 	private function getTransaction()
 	{
-		if (!empty($transaction)) {
+		if (!empty($this->transaction)) {
 			return;
 		}
 

@@ -112,4 +112,14 @@ class PaymentDiscount
 		$coupon->update();
 	}
 
+	public function getSimulatedPrice($cart, $paymentType)
+	{
+		$couponId = Configuration::get(self::prefix . self::bcash . $paymentType);
+		$cart->addCartRule($couponId);
+		$simulatedPrice = $cart->getOrderTotal(true, Cart::BOTH);
+		$cart->removeCartRule($couponId);
+
+		return $simulatedPrice;
+	}
+
 }

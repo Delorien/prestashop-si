@@ -122,4 +122,49 @@ class PaymentDiscount
 		return $simulatedPrice;
 	}
 
+	public function apply($order, $paymentType, $context)
+	{
+		$couponId = Configuration::get(self::prefix . self::bcash . $paymentType);
+		$coupon = new CartRule($couponId);
+
+	    $tax_incl = $coupon->getContextualValue(true);
+		$tax_excl = $coupon->getContextualValue(false);
+
+		// Add cart rule to cart and in order
+		$values = array(
+		    'tax_incl' => $tax_incl,
+			'tax_excl' => $tax_excl
+		);
+		$order->addCartRule($coupon->id, $coupon->name[Configuration::get('PS_LANG_DEFAULT')], $values);
+
+		$coupon->checkValidity($context, false, false);
+
+		$order->total_discounts += $tax_incl;
+		$order->total_discounts_tax_incl += $tax_incl;
+		$order->total_discounts_tax_excl += $tax_excl;
+		$order->total_paid -= $tax_incl;
+		$order->total_paid_tax_incl -= $tax_incl;
+		$order->total_paid_tax_excl -= $tax_excl;
+
+		// Update Order
+		$order->update();
+
+		return true;
+	}
+
+	public function getAmountOrderDiscounts($order)
+    {
+        $order_discounts = $order->getDiscounts();
+        $totalDiscouts = (float) 0;
+
+        if (count($order_discounts) > 0) {
+            foreach ($order_discounts as $discount) {
+                $totalDiscouts += $discount['value'];
+            }
+        }
+
+        return FormatHelper::monetize($totalDiscouts);
+    }
+	
+
 }

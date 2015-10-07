@@ -6,7 +6,9 @@ if (! defined('_PS_VERSION_')) {
 
 include_once dirname(__FILE__).'/helper/BcashStatusHelper.php';
 include_once dirname(__FILE__).'/helper/PaymentMethodHelper.php';
+include_once dirname(__FILE__).'/domain/PaymentDiscount.php';
 include_once dirname(__FILE__).'/domain/History.php';
+
 
 class Bcash extends PaymentModule
 {
@@ -47,7 +49,11 @@ class Bcash extends PaymentModule
             return false;
         }
 
-         if (! $this->createTables()) {
+		if(!$this->generateDefaultBcashDiscounts()) {
+			return false;
+		}
+
+        if (! $this->createTables()) {
             return false;
         }
 
@@ -59,6 +65,7 @@ class Bcash extends PaymentModule
 	public function uninstall()
 	{
 	  if (!$this->deleteBcashOrderStatus() ||
+	  		!$this->deleteDefaultBcashDiscounts() ||
 	  		!Configuration::deleteByName('PS_OS_BCASH_IN_PROGRESS') ||
 			!Configuration::deleteByName('PS_OS_BCASH_APPROVED') ||
 			!Configuration::deleteByName('PS_OS_BCASH_COMPLETED') ||
@@ -69,6 +76,7 @@ class Bcash extends PaymentModule
 			!parent::uninstall()) {
 	    return false;
 	  }
+
 	  return true;
 	}
 
@@ -80,7 +88,6 @@ class Bcash extends PaymentModule
 	 	//Verifica se o formulário foi submetido e retornou ao método ou se só deve cria-lo e exibi-lo para ser preenchido
 	    if (Tools::isSubmit('btn_submit'))
 	    {
-
 	    	//Recupera valor dos arrays POST ou GET
 	    	$titulo = strval(Tools::getValue('titulo'));
 	    	$email = strval(Tools::getValue('email'));
@@ -107,9 +114,10 @@ class Bcash extends PaymentModule
         	    Configuration::updateValue(self::prefix . 'TOKEN', $token);
 			}
 
-       	    Configuration::updateValue(self::prefix . 'DESCONTO_BOLETO', $desconto_boleto);
-       	    Configuration::updateValue(self::prefix . 'DESCONTO_TEF', $desconto_tef);
-       	    Configuration::updateValue(self::prefix . 'DESCONTO_CREDITO', $desconto_credito);
+			PaymentDiscount::update('DESCONTO_BOLETO', $desconto_boleto);
+			PaymentDiscount::update('DESCONTO_TEF', $desconto_tef);
+			PaymentDiscount::update('DESCONTO_CREDITO', $desconto_credito);
+
 			Configuration::updateValue(self::prefix . 'CAMPO_FONE', $campo_fone);
 
 			Configuration::updateValue(self::prefix . 'CAMPO_CPF', $campo_cpf);
@@ -191,7 +199,7 @@ class Bcash extends PaymentModule
 		$this->context->controller->addCSS($this->getPathUri() . 'resources/css/bcash_option.css', 'all');
 		$this->context->smarty->assign(
 			array(
-      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', [], true)
+      			'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', array(), true)
       		)
   		);
 
@@ -273,6 +281,17 @@ class Bcash extends PaymentModule
         return true;
     }
 
+	private function generateDefaultBcashDiscounts() {
+			$paymentDiscount = new PaymentDiscount();
+			return $paymentDiscount->createDefaultBcashDiscounts();
+	}
+
+	private function deleteDefaultBcashDiscounts()
+	{
+		$paymentDiscount = new PaymentDiscount();
+		return $paymentDiscount->deleteDefaultBcashDiscounts();
+	}
+
 	private function generateBcashOrderStatus() 
 	{
 
@@ -291,7 +310,8 @@ class Bcash extends PaymentModule
 			$order_state->paid = $statusBcash['paid'];
 
 			foreach (Language::getLanguages() as $language) {
-				$order_state->name[(int) $language['id_lang']] = $statusBcash['name'];
+				$lang = (int) $language['id_lang']; 
+				$order_state->name[$lang] = $statusBcash['name'];
 			}
 
 	        if ($order_state->add()) {//save new order status

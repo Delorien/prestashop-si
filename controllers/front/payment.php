@@ -3,6 +3,7 @@
 include_once dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
 include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
 include_once dirname(__FILE__).'/../../helper/FormatHelper.php';
+include_once dirname(__FILE__).'/../../domain/PaymentDiscount.php';
 
 use Bcash\Service\Installments;
 use Bcash\Exception\ValidationException;
@@ -39,13 +40,13 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			$bankSlipsAmounts = null;
 
 			if (!empty($cardsInstallments)) {
-				$cardsAmounts = $this->getAmounts($cardsInstallments, Configuration::get(self::prefix . 'DESCONTO_CREDITO'));
+				$cardsAmounts = $this->getAmounts($cardsInstallments, 'DESCONTO_CREDITO');
 			}
 			if (!empty($TEFsInstallments)) {
-				$TEFsAmounts = $this->getAmounts($TEFsInstallments, Configuration::get(self::prefix . 'DESCONTO_TEF'));
+				$TEFsAmounts = $this->getAmounts($TEFsInstallments, 'DESCONTO_TEF');
 			}
 			if (!empty($bankSlipsInstallments)) {
-				$bankSlipsAmounts = $this->getAmounts($bankSlipsInstallments, Configuration::get(self::prefix . 'DESCONTO_BOLETO'));
+				$bankSlipsAmounts = $this->getAmounts($bankSlipsInstallments, 'DESCONTO_BOLETO');
 			}
 
 			$data = array(
@@ -65,7 +66,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			            'anosVencimento' => $this->getYears(),
 
 						'campo_cpf' => $this->getCpfMode(),
-						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', [], true)
+						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', array(), true)
 					);
 
 			$erros_messages = array();
@@ -84,7 +85,7 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
     	}else {
 			$this->context->smarty->assign(
 				array(
-      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', [], true)
+      				'payment_action_url' => $this->context->link->getModuleLink('bcash', 'payment', array(), true)
       			)
   			);
 
@@ -116,23 +117,26 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 		return $result;
 	}
 
-	private function getAmounts($paymentOption, $discount)
+	private function getAmounts($paymentOption, $paymentType)
 	{
 		$price = FormatHelper::monetize($paymentOption[0]->installments[0]->amount);
 		$amounts = array('nodiscount' => null, 'price' => $price);
 
+		$discount = Configuration::get(self::prefix . $paymentType);
+
 		if (!empty($discount)) {
 			$amounts['nodiscount'] = $price;
-			$amounts['price'] = $this->applyDiscount($price, $discount);
+			$amounts['price'] = $this->applyDiscount($paymentType);
 		}
 
 		return $amounts;
 	}
 
-	private function applyDiscount($price, $discount)
+	private function applyDiscount($paymentType)
 	{
-		$newPrice = $price - FormatHelper::monetize((($price * $discount) / 100));
-		return FormatHelper::monetize($newPrice);
+		$paymentDiscount = new PaymentDiscount();
+		$simulatedPrice = $paymentDiscount->getSimulatedPrice($this->context->cart, $paymentType);
+		return FormatHelper::monetize($simulatedPrice);
 	}
 
 	/**

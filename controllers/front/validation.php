@@ -1,6 +1,7 @@
 <?php
 
 include_once dirname(__FILE__).'/../../domain/History.php';
+include_once dirname(__FILE__).'/../../domain/PaymentDiscount.php';
 include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
 include_once dirname(__FILE__).'/../../helper/FormatHelper.php';
 include dirname(__FILE__).'/../../helper/BcashStateHelper.php';
@@ -90,7 +91,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$shoppingCost = FormatHelper::monetize($shoppingCost);
 	    $transactionRequest->setShipping($shoppingCost);
 	    $transactionRequest->setDiscount($this->calculateDiscounts());
-	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification', [], true));
+	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification', array(), true));
 	    $transactionRequest->setProducts($this->createProducts());
 	    $transactionRequest->setAcceptedContract("S");
 	    $transactionRequest->setViewedContract("S");
@@ -207,46 +208,23 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 	private function calculateDiscounts()
 	{
-		$totalDiscouts = $this->getCartDiscounts();
+		$paymentDiscount = new PaymentDiscount();
 
 		$paymentMethodHelper = new PaymentMethodHelper();
 		$payment_method = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
-		$price = $this->context->cart->getOrderTotal(true, Cart::BOTH);
+		$order = new Order($this->module->currentOrder);
 
 		if (PaymentMethodHelper::isCard($payment_method) && (Tools::getValue('card-installment') == 1)) {
-			$totalDiscouts += $this->applyDiscount($price, Configuration::get(self::prefix . 'DESCONTO_CREDITO'));
+			$paymentDiscount->apply($order, 'DESCONTO_CREDITO', $this->context);
 		} else if (PaymentMethodHelper::isTEF($payment_method)) {
-			$totalDiscouts += $this->applyDiscount($price, Configuration::get(self::prefix . 'DESCONTO_TEF'));
+			$paymentDiscount->apply($order, 'DESCONTO_TEF', $this->context);
 		} else if (PaymentMethodHelper::isBankSlip($payment_method)){
-			$totalDiscouts += $this->applyDiscount($price, Configuration::get(self::prefix . 'DESCONTO_BOLETO'));
+			$paymentDiscount->apply($order, 'DESCONTO_BOLETO', $this->context);
 		}
+
+		$totalDiscouts = $paymentDiscount->getAmountOrderDiscounts($order);
 
 		return $totalDiscouts;
-	}
-
-	private function getCartDiscounts()
-    {
-        $cart_discounts = $this->context->cart->getDiscounts();
-
-        $totalDiscouts = (float) 0;
-
-        if (count($cart_discounts) > 0) {
-            foreach ($cart_discounts as $discount) {
-                $totalDiscouts += $discount['value_real'];
-            }
-        }
-
-        return FormatHelper::monetize($totalDiscouts);
-    }
-
-    private function applyDiscount($price, $discount)
-	{
-		$amount = (float) 0;
-
-		if (!empty($discount)) {
-			$amount = (($price * $discount) / 100);
-		}
-		return FormatHelper::monetize($amount);
 	}
 
 	private function createCreditCard()
@@ -276,6 +254,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 			'retentativa' => true,
 		    'b_errors' => $e->getErrors()->list,
 		);
+
 
 		// $url = $this->context->link->getModuleLink('bcash', 'payment', $params, [], true);
 		$url = $this->context->link->getModuleLink('bcash', 'payment', $params);

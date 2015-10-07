@@ -45,7 +45,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 			Tools::redirect('index.php?controller=order-confirmation' .
 			'&id_cart='		. $this->context->cart->id .
 			'&id_module='	. $this->module->id .
-			'&reference_order='	. $order->reference  .
+			'&reference_order='	. $order->id  .
 			'&key='			. $this->context->customer->secure_key .
 			'&bcash_transaction_id='	. $response->transactionId .
 			'&bcash_paymentLink='		. $response->paymentLink .
@@ -174,8 +174,10 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	private function createAddress()
 	{
 		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
+
 	    $address = new Bcash\Domain\Address();
 	    $address->setAddress($deliveryAddress->address1);
+		$address->setNumber($deliveryAddress->number);
 	    $address->setNeighborhood($deliveryAddress->address2);
 	    $address->setCity($deliveryAddress->city);
 	    $address->setZipCode($deliveryAddress->postcode);
@@ -250,10 +252,12 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 		$params = array(
 			'retentativa' => true,
-		    'b_errors' => $e->getErrors()->list, 
+		    'b_errors' => $e->getErrors()->list,
 		);
 
-		$url = $this->context->link->getModuleLink('bcash', 'payment', $params, array(), true);
+
+		// $url = $this->context->link->getModuleLink('bcash', 'payment', $params, [], true);
+		$url = $this->context->link->getModuleLink('bcash', 'payment', $params);
 
 		Tools::redirectLink($url);
 	}

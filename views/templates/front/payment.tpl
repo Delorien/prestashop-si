@@ -116,7 +116,7 @@
 
 				<div class="b-form-group codigo-seguranca">
 					<label>Código de Segurança</label>
-					<input name="card-security-code" type="text" style="width: 60px;" />
+					<input name="card-security-code" type="text" maxlength="4" style="width: 60px;" />
 				</div>
 			</div>
 			<!-- card form -->

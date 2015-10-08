@@ -253,7 +253,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		    'b_errors' => $e->getErrors()->list, 
 		);
 
-		$url = $this->context->link->getModuleLink('bcash', 'payment', $params, array(), true);
+		$url = $this->context->link->getModuleLink('bcash', 'payment', $params, true);
 
 		Tools::redirectLink($url);
 	}

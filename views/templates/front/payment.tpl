@@ -114,7 +114,7 @@
 					<input name="card-owner-name" type="text" />
 				</div>
 
-				<div class="b-form-group">
+				<div class="b-form-group codigo-seguranca">
 					<label>Código de Segurança</label>
 					<input name="card-security-code" type="text" style="width: 60px;" />
 				</div>

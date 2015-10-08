@@ -45,6 +45,12 @@ $(document).ready(function() {
 			$('.bcash-termos').hide('fast');
 			$('#b-termos-credit').show('fast');
 
+			if (radio.id == 'payment-method-45' ) {
+				$('.codigo-seguranca').hide('fast');
+			} else {
+				$('.codigo-seguranca').show('fast');
+			}
+
 		} else {
 			$('#card-data').hide('slow');
 

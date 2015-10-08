@@ -24,6 +24,10 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 		$orderId = Tools::getValue('pedido');
 		$statusId = Tools::getValue('status_id');
 
+		if ($this->isCurrentState($orderId, $statusId)) {
+			return;
+		}
+
 		$email = Configuration::get(self::prefix . 'EMAIL');
 		$token =  Configuration::get(self::prefix . 'TOKEN');
 
@@ -45,6 +49,14 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 		} catch (ConnectionException $e) {
 			$this->logUpdateFail($orderId, $transactionId, $statusId, $e);
 		}
+	}
+
+	public function isCurrentState($orderId, $statusId)
+	{
+		$order = new Order($orderId);
+		$currentState = $order->current_state;
+		$newState = $this->getStatus($statusId);
+		return $currentState == $newState;
 	}
 
 	private function updateStatus($orderId, $statusId)
@@ -76,6 +88,7 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 	private function getOrderValue($orderId)
 	{
 		$order = new Order($orderId);
+
 		$total_price = number_format(Tools::ps_round($order->total_paid, 2), 2, '.', '');
 		return $total_price;
 	}

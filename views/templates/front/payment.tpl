@@ -87,7 +87,7 @@
 				<h4>Dados do Cartão</h4>
 				<div class="b-form-group">
 					<label>Número do cartão</label>
-					<input name="card-number" type="text" />
+					<input name="card-number" type="number" />
 				</div>
 
 				<div id="validadeCartao" class="b-form-group">
@@ -111,12 +111,12 @@
 
 				<div class="b-form-group">
 					<label>Nome no cartão</label>
-					<input name="card-owner-name" type="text" />
+					<input id="card-owner-name" name="card-owner-name" type="text" />
 				</div>
 
 				<div class="b-form-group codigo-seguranca">
 					<label>Código de Segurança</label>
-					<input name="card-security-code" type="text" maxlength="4" style="width: 60px;" />
+					<input id="card-security-code" name="card-security-code" type="text" maxlength="4" style="width: 60px;" />
 				</div>
 			</div>
 			<!-- card form -->

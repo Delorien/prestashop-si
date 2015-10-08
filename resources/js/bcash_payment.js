@@ -72,6 +72,18 @@ $(document).ready(function() {
 		}
 	};
 
+	$('#card-security-code').keypress(function() {
+  		return event.charCode >= 48 && event.charCode <= 57;
+	});
+
+	$('#card-owner-name').keypress(function(event) {
+		if (event.which < 48 || 
+	    	(event.which > 57 && event.which < 65) || 
+	    	(event.which > 90 && event.which < 97) ||
+	    	event.which > 122) {
+	    	event.preventDefault();
+		}
+	});
 });
 //document.ready
 

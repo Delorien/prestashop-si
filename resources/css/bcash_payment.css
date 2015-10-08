@@ -255,10 +255,18 @@
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 }
 
-#bcash form input[type="text"], #bcash form select, #bcash form textarea {
+#bcash form input[type="text"], input[type="number"], #bcash form select, #bcash form textarea {
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	padding: 5px;
+}
+
+#bcash input[type=number]::-webkit-inner-spin-button,
+#bcash input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 
 #bcash .b-form-horizontal .b-form-group {

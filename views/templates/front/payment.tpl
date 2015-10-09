@@ -33,8 +33,13 @@
 		<h3>Selecione a Forma de Pagamento</h3>
 {if ($cardsInstallments != false)}
 		<div class="forma-pagamento">
-			<h4>Cartão de Crédito</h4>
-
+			<div class="payment-type-name">
+				<h4>Cartão de Crédito</h4>
+				{if $cardsNoDiscount != null}
+					<span>Desconto especial de {$cardsPercent}% + Frete</span>
+				{/if}
+			</div>
+	
 			<ul id="credit_list">
 				{foreach from=$cardsInstallments item=card}
 				<li>
@@ -143,7 +148,12 @@
 
 {if ($tefsInstallments != false)}
 		<div class="forma-pagamento">
-			<h4>Transferência Bancária</h4>
+			<div class="payment-type-name">
+				<h4>Transferência Bancária</h4>
+				{if $tefsNoDiscount != null}
+					<span>Desconto especial de {$tefsPercent}% + Frete</span>
+				{/if}
+			</div>
 
 			<ul id="tef_list">
 				{foreach from=$tefsInstallments item=tef}
@@ -176,7 +186,12 @@
 
 {if ($bankSlipsInstallments != false)}
 		<div class="forma-pagamento">
-			<h4>Boleto Bancário</h4>
+			<div class="payment-type-name">
+				<h4>Boleto Bancário</h4>
+				{if $bankSlipsNoDiscount != null}
+					<span>Desconto especial de {$bankSlipsPercent}% + Frete</span>
+				{/if}
+			</div>
 
 			<ul id="bankslip_list">
 				{foreach from=$bankSlipsInstallments item=bankSlip}

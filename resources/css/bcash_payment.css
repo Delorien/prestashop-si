@@ -418,3 +418,14 @@
 	background-color: rgba(0, 0, 0, 0.2);
 	display: none;
 }
+
+.payment-type-name h4 {
+	display: inline;
+}
+
+.payment-type-name span {
+	margin-left: 8px;
+    display: inline-block;
+    color: #4f882d;
+    font-weight: 600;	
+}

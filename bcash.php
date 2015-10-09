@@ -129,7 +129,7 @@ class Bcash extends PaymentModule
 					Configuration::updateValue(self::prefix . 'CAMPO_CPF_SELECT', $campo_cpf_select);
 				}
 				if (!empty($table_cpf)) {
-					Configuration::updateValue(self::prefix . 'TABLE_CPF', $table_cpf);
+					Configuration::updateValue(self::prefix . 'TABLE_CPF', str_replace(_DB_PREFIX_, '', $table_cpf));
 				}
 				if (!empty($where_cpf)) {
 					Configuration::updateValue(self::prefix . 'WHERE_CPF', $where_cpf);

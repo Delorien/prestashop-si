@@ -14,7 +14,7 @@ class PaymentMethodHelper
 	public function __construct() {
 		self::$cards = array(
 			$this->createPayment(1, 'Visa', self::CARD_TYPE, 1.0, 12),
-			$this->createPayment(2, 'Master', self::CARD_TYPE, 1.0, 12),
+			$this->createPayment(2, 'Mastercard', self::CARD_TYPE, 1.0, 12),
 			$this->createPayment(37, 'American Express', self::CARD_TYPE, 1.0, 12),
 			$this->createPayment(45, 'Aura', self::CARD_TYPE, 1.0, 24),
 			$this->createPayment(55, 'Diners', self::CARD_TYPE, 1.0, 12),
@@ -27,11 +27,11 @@ class PaymentMethodHelper
 		);
 
 		self::$onlineTransfer = array(
-			$this->createPayment(58, 'BB', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
-			$this->createPayment(59, 'Bradesco', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
-			$this->createPayment(60, 'Itaú', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
-			$this->createPayment(61, 'Banrisul', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
-			$this->createPayment(62, 'HSBC', self::ONLINE_TRANSFER_TYPE, 0.01, 1)
+			$this->createPayment(58, 'Banco do Brasil', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
+			$this->createPayment(59, 'Banco Bradesco', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
+			$this->createPayment(60, 'Banco Itaú', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
+			$this->createPayment(61, 'Banco Banrisul', self::ONLINE_TRANSFER_TYPE, 0.01, 1),
+			$this->createPayment(62, 'Banco HSBC', self::ONLINE_TRANSFER_TYPE, 0.01, 1)
 		);
 	}
 

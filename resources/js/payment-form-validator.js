@@ -1,5 +1,21 @@
 $(document).ready(function() {
 
+
+	jQuery.validator.addMethod("isCVVCorrectSize", function(value, element) {
+
+		var mandatorySize = 3;
+
+		if ( $('input[name=payment-method]:checked', '#b-form-checkout').val() == 37 ) {
+			mandatorySize = 4;
+		}
+
+		if (value.length < mandatorySize) {
+			return false;
+		}
+
+		return true;
+	}, "Tamanho do CVV inválido.");
+
 	$("#b-form-checkout").validate({
 		ignoreTitle: true,
 		ignore: ":hidden",
@@ -23,7 +39,8 @@ $(document).ready(function() {
 				required : true
 			},
 			'card-security-code' : {
-				required : true
+				required : true,
+				isCVVCorrectSize : true
 			}
 		},
 		messages : {

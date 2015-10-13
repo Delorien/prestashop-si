@@ -47,7 +47,11 @@ $(document).ready(function() {
 
 			if (radio.id == 'payment-method-45' ) {
 				$('.codigo-seguranca').hide('fast');
+			} else if (radio.id == 'payment-method-37') {
+				$('#card-security-code').attr('maxlength', '4');
+				$('.codigo-seguranca').show('fast');
 			} else {
+				$('#card-security-code').attr('maxlength', '3');
 				$('.codigo-seguranca').show('fast');
 			}
 

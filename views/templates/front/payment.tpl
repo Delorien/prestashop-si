@@ -92,7 +92,7 @@
 				<h4>Dados do Cartão</h4>
 				<div class="b-form-group">
 					<label>Número do cartão</label>
-					<input id="card-number" name="card-number" type="number" />
+					<input id="card-number" name="card-number" type="text" />
 				</div>
 
 				<div id="validadeCartao" class="b-form-group">

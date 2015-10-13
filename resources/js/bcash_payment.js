@@ -76,24 +76,56 @@ $(document).ready(function() {
 		}
 	};
 
-	$('#card-security-code').keypress(function() {
-  		return event.charCode >= 48 && event.charCode <= 57;
+
+	var validaTecla=function(evt){
+		var ev=evt.keyCode;
+		if(ev==8||ev==9||ev==13||ev==16||ev==35||ev==36||ev==37||ev==38||ev==39||ev==40||ev==46){
+			return true;
+		}
+	};
+
+
+	$('#card-number').keydown(function(evt){
+		if ((evt.keyCode>47&&evt.keyCode<58&&evt.shiftKey===false)||(evt.keyCode>95&&evt.keyCode<106)){
+			return true;
+		}else{
+			if(validaTecla(evt)){
+				return true;
+			}else{
+				evt.preventDefault();
+			}
+		}
 	});
 
-	$('#card-number').keypress(function() {
-  		return event.charCode >= 48 && event.charCode <= 57;
+	$('#card-security-code').keydown(function(evt){
+		if ((evt.keyCode>47&&evt.keyCode<58&&evt.shiftKey===false)||(evt.keyCode>95&&evt.keyCode<106)){
+			return true;
+		}else{
+			if(validaTecla(evt)){
+				return true;
+			}else{
+				evt.preventDefault();
+			}
+		}
 	});
 
-	$('#card-owner-name').keypress(function(event) {
-		if ((event.which < 48 && event.which != 32)||
-	    	(event.which > 57 && event.which < 65) ||
-	    	(event.which > 90 && event.which < 97) ||
-	    	event.which > 122) {
-	    	event.preventDefault();
+	$('#card-owner-name').keydown(function(evt){
+		if(evt.keyCode===0||(evt.keyCode>64&&evt.keyCode<91)){
+			return true;
+		}else{
+			if(validaTecla(evt)||evt.keyCode==32){
+				return true;
+			}else{
+				if(evt.keyCode==59||evt.keyCode==219||evt.keyCode==222||evt.keyCode==186){
+					return true;
+				}else{
+					evt.preventDefault();
+				}
+			}
 		}
 	});
 });
-//document.ready
+// document.ready
 
 $(window).load(function() {
 	if ($.isFunction($.uniform.restore)) {

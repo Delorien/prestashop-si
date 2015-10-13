@@ -29,6 +29,10 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	 */
 	public function postProcess()
 	{
+		if (empty(Cart::getNbProducts($this->context->cart->id))) {
+			Tools::redirect('index.php?controller=order&step=1');
+		}
+
 		$payment = new Payment(Configuration::get(self::prefix.'CONSUMER_KEY'));
 		$payment->enableSandBox(Configuration::get(self::prefix.'SANDBOX'));
 

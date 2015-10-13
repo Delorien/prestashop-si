@@ -29,7 +29,8 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	 */
 	public function postProcess()
 	{
-		if (empty(Cart::getNbProducts($this->context->cart->id))) {
+		$cartSize = $this->context->cart->nbProducts();
+		if (empty($cartSize)) {
 			Tools::redirect('index.php?controller=order&step=1');
 		}
 

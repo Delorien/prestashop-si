@@ -116,7 +116,7 @@
 
 				<div class="b-form-group">
 					<label>Nome no cartão</label>
-					<input id="card-owner-name" name="card-owner-name" type="text" />
+					<input id="card-owner-name" name="card-owner-name" type="text" style="text-transform:uppercase;" />
 				</div>
 
 				<div class="b-form-group codigo-seguranca">

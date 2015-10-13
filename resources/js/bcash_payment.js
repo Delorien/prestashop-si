@@ -85,8 +85,8 @@ $(document).ready(function() {
 	});
 
 	$('#card-owner-name').keypress(function(event) {
-		if (event.which < 48 || 
-	    	(event.which > 57 && event.which < 65) || 
+		if ((event.which < 48 && event.which != 32)||
+	    	(event.which > 57 && event.which < 65) ||
 	    	(event.which > 90 && event.which < 97) ||
 	    	event.which > 122) {
 	    	event.preventDefault();

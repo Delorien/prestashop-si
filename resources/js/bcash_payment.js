@@ -39,8 +39,8 @@ $(document).ready(function() {
 			$('.card-installments').hide('fast');
 			$('#card-installment-' + radio.value).show('fast');
 
-			$('.b-button-sucess').hide('fast');
-			$('#b-button-sucess-credit').show('fast');
+			$('.b-button-sucess').fadeOut();
+			$('#b-button-sucess-credit').fadeIn();
 
 			$('.bcash-termos').hide('fast');
 			$('#b-termos-credit').show('fast');
@@ -61,14 +61,15 @@ $(document).ready(function() {
 			resetAllFields();
 
 			if ($('#' + radio.id, '#tef_list').length == 1) {
-				$('.b-button-sucess').hide('fast');
-				$('#b-button-sucess-tef').show('fast');
+
+				$('.b-button-sucess').fadeOut();
+				$('#b-button-sucess-tef').fadeIn();
 
 				$('.bcash-termos').hide('fast');
 				$('#b-termos-tef').show('fast');
 			}else {
-				$('.b-button-sucess').hide('fast');
-				$('#b-button-sucess-bankslip').show('fast');
+				$('.b-button-sucess').fadeOut();
+				$('#b-button-sucess-bankslip').fadeIn();
 
 				$('.bcash-termos').hide('fast');
 				$('#b-termos-bankslip').show('fast');

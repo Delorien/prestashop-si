@@ -90,12 +90,12 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    $transactionRequest = new Bcash\Domain\TransactionRequest();
 
 	    $transactionRequest->setSellerMail(Configuration::get(self::prefix.'EMAIL'));
+	    $transactionRequest->setDiscount($this->calculateDiscounts());
 	    $transactionRequest->setOrderId($this->createOrder());
 	    $transactionRequest->setBuyer($this->createBuyer());
 		$shoppingCost = $this->context->cart->getTotalShippingCost();
 		$shoppingCost = FormatHelper::monetize($shoppingCost);
 	    $transactionRequest->setShipping($shoppingCost);
-	    $transactionRequest->setDiscount($this->calculateDiscounts());
 	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification', array(), true));
 	    $transactionRequest->setProducts($this->createProducts());
 	    $transactionRequest->setAcceptedContract("S");
@@ -215,18 +215,17 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 		$paymentMethodHelper = new PaymentMethodHelper();
 		$payment_method = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
-		$order = new Order($this->module->currentOrder);
+		$cart = $this->context->cart;
 
 		if (PaymentMethodHelper::isCard($payment_method) && (Tools::getValue('card-installment') == 1)) {
-			$paymentDiscount->apply($order, 'DESCONTO_CREDITO', $this->context);
+			$paymentDiscount->apply($cart, 'DESCONTO_CREDITO', $this->context);
 		} else if (PaymentMethodHelper::isTEF($payment_method)) {
-			$paymentDiscount->apply($order, 'DESCONTO_TEF', $this->context);
+			$paymentDiscount->apply($cart, 'DESCONTO_TEF', $this->context);
 		} else if (PaymentMethodHelper::isBankSlip($payment_method)){
-			$paymentDiscount->apply($order, 'DESCONTO_BOLETO', $this->context);
+			$paymentDiscount->apply($cart, 'DESCONTO_BOLETO', $this->context);
 		}
 
-		$totalDiscouts = $paymentDiscount->getAmountOrderDiscounts($order);
-
+		$totalDiscouts = $paymentDiscount->getAmountOrderDiscounts($cart);
 		return $totalDiscouts;
 	}
 

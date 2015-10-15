@@ -429,3 +429,13 @@
     color: #4f882d;
     font-weight: 600;	
 }
+
+.firenumber::-webkit-outer-spin-button,
+.firenumber::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.firenumber {
+    -moz-appearance:textfield;
+}

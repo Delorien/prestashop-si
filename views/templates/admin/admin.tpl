@@ -90,16 +90,16 @@
 		<div class="b-form-group">
 			<label>Número do Endereço</label>
 			<label class="label_config_bd" for="campo_numero_endereco_def">
-				{if $campo_numero_endereco eq 'exibir'}
-					<input type="radio" id="campo_numero_endereco_def" name="campo_numero_endereco" checked value="exibir"> <span>O número esta junto com o endereço. Ex.: Rua ABCD , 10</span>
+				{if $campo_numero_endereco eq 'default'}
+					<input type="radio" id="campo_numero_endereco_def" name="campo_numero_endereco" checked value="default"> <span>O número esta junto com o endereço. Ex.: Rua ABCD , 10</span>
 				{else}
-					<input type="radio" id="campo_numero_endereco_def" name="campo_numero_endereco" value="exibir"> <span>O número de endereço esta junto com o endereço. Ex.: Rua ABCD , 10</span>
+					<input type="radio" id="campo_numero_endereco_def" name="campo_numero_endereco" value="default"> <span>O número de endereço esta junto com o endereço. Ex.: Rua ABCD , 10</span>
 				{/if}
 			</label>
 			<label class="label_config_bd" for="campo_numero_endereco_specified">
 				{if $campo_numero_endereco == 'specified'}
 					<input type="radio" id="campo_numero_endereco_specified" name="campo_numero_endereco" checked value="specified"> <span>Especificar campo do Número</span>
-					<label>(tabela: {$table_numero_endereco}, campo: {$campo_numero_endereco_select}, id_customer: {$where_numero_endereco_select})</label>
+					<label>(tabela: {$table_numero_endereco}, campo: {$campo_numero_endereco_select}, id_address: {$where_numero_endereco_select})</label>
 				{else}
 					<input type="radio" id="campo_numero_endereco_specified" name="campo_numero_endereco" value="specified"> <span>Especificar campo do Número</span>
 				{/if}
@@ -119,7 +119,7 @@
 						</select>
 					</label>
 					<label>
-						Campo com id_customer:
+						Campo com id_address:
 						<select style="height: 35px" name="where_numero_endereco_select" id="where_numero_endereco_select" >
 						</select>
 					</label>

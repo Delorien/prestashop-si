@@ -181,14 +181,31 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
 	    $address = new Bcash\Domain\Address();
 	    $address->setAddress($deliveryAddress->address1);
+		$address->setNumber($this->getNumber());
 	    $address->setNeighborhood($deliveryAddress->address2);
 	    $address->setCity($deliveryAddress->city);
 	    $address->setZipCode($deliveryAddress->postcode);
-
 		$state = new State((int) $deliveryAddress->id_state);
 		$address->setState(BcashStateHelper::getStateAbbreviation( $state->name ));
 
 	    return $address;
+	}
+
+	private function getNumber() 
+	{
+		$campoNumero = Configuration::get(self::prefix . 'CAMPO_NUMERO_ENDERECO');
+
+		if ( !empty($campoNumero) && $campoNumero == 'specified' ) {
+			$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_NUMERO_ENDERECO');
+			$coluna = Configuration::get(self::prefix.'CAMPO_NUMERO_ENDERECO_SELECT');
+			$where = Configuration::get(self::prefix.'WHERE_NUMERO_ENDERECO');
+
+			$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
+					' WHERE ' . $where . ' = ' . (int) $this->context->cart->id_address_delivery;
+
+			$result = Db::getInstance()->getValue($sql);
+			return $result;
+		}
 	}
 
 	private function createProducts()

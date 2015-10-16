@@ -97,6 +97,7 @@ class Bcash extends PaymentModule
 			$desconto_tef = strval(Tools::getValue('desconto_tef'));
 			$desconto_credito = strval(Tools::getValue('desconto_credito'));
 			$campo_cpf = strval(Tools::getValue('campo_cpf'));
+			$campo_numero_endereco = strval(Tools::getValue('campo_numero_endereco'));
 			$campo_fone = strval(Tools::getValue('campo_fone'));
 			$directPayment = strval(Tools::getValue('directPayment'));
 			$sandbox = strval(Tools::getValue('sandbox'));
@@ -135,6 +136,23 @@ class Bcash extends PaymentModule
 					Configuration::updateValue(self::prefix . 'WHERE_CPF', $where_cpf);
 				}
 			}
+
+			Configuration::updateValue(self::prefix . 'CAMPO_NUMERO_ENDERECO', $campo_numero_endereco);
+			if ($campo_numero_endereco == 'specified') {
+				$campo_numero_endereco_select = strval(Tools::getValue('campo_numero_endereco_select'));
+				$table_numero_endereco = strval(Tools::getValue('tableAjaxNumeroEndereco'));
+				$where_numero_endereco = strval(Tools::getValue('where_numero_endereco_select'));
+				if (!empty($campo_numero_endereco_select)) {
+					Configuration::updateValue(self::prefix . 'CAMPO_NUMERO_ENDERECO_SELECT', $campo_numero_endereco_select);
+				}
+				if (!empty($table_numero_endereco)) {
+					Configuration::updateValue(self::prefix . 'TABLE_NUMERO_ENDERECO', str_replace(_DB_PREFIX_, '', $table_numero_endereco));
+				}
+				if (!empty($where_numero_endereco)) {
+					Configuration::updateValue(self::prefix . 'WHERE_NUMERO_ENDERECO', $where_numero_endereco);
+				}
+			}
+
 
 			if (!empty($directPayment)) {
         	    Configuration::updateValue(self::prefix . 'DIRECT_PAYMENT', 1);
@@ -177,6 +195,10 @@ class Bcash extends PaymentModule
 				'table_cpf' => Configuration::get(self::prefix.'TABLE_CPF'),
 				'campo_cpf_select' => Configuration::get(self::prefix.'CAMPO_CPF_SELECT'),
 				'where_cpf_select' => Configuration::get(self::prefix.'WHERE_CPF'),
+				'campo_numero_endereco' => Configuration::get(self::prefix.'CAMPO_NUMERO_ENDERECO'),
+				'table_numero_endereco' => Configuration::get(self::prefix.'TABLE_NUMERO_ENDERECO'),
+				'campo_numero_endereco_select' => Configuration::get(self::prefix.'CAMPO_NUMERO_ENDERECO_SELECT'),
+				'where_numero_endereco_select' => Configuration::get(self::prefix.'WHERE_NUMERO_ENDERECO'),
 				'campo_fone' => Configuration::get(self::prefix.'CAMPO_FONE'),
 				'campos_fone' => array_keys(get_object_vars(new Customer())),
 				'ajax_dir' => _MODULE_DIR_ . 'bcash/ServiceTables.php'

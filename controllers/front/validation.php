@@ -250,7 +250,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 		$params = array(
 			'retentativa' => true,
-		    'b_errors' => $e->getErrors()->list,
+			'b_errors' => $e->getErrors()->list,
 		);
 
 

@@ -33,8 +33,13 @@
 		<h3>Selecione a Forma de Pagamento</h3>
 {if ($cardsInstallments != false)}
 		<div class="forma-pagamento">
-			<h4>Cartão de Crédito</h4>
-
+			<div class="payment-type-name">
+				<h4>Cartão de Crédito</h4>
+				{if $cardsNoDiscount != null}
+					<span>Desconto especial de {$cardsPercent}% + Frete</span>
+				{/if}
+			</div>
+	
 			<ul id="credit_list">
 				{foreach from=$cardsInstallments item=card}
 				<li>
@@ -87,7 +92,7 @@
 				<h4>Dados do Cartão</h4>
 				<div class="b-form-group">
 					<label>Número do cartão</label>
-					<input name="card-number" type="text" />
+					<input class="firenumber" id="card-number" name="card-number" type="number" />
 				</div>
 
 				<div id="validadeCartao" class="b-form-group">
@@ -111,12 +116,12 @@
 
 				<div class="b-form-group">
 					<label>Nome no cartão</label>
-					<input name="card-owner-name" type="text" />
+					<input id="card-owner-name" name="card-owner-name" type="text" style="text-transform:uppercase;" />
 				</div>
 
-				<div class="b-form-group">
+				<div class="b-form-group codigo-seguranca">
 					<label>Código de Segurança</label>
-					<input name="card-security-code" type="text" style="width: 60px;" />
+					<input id="card-security-code" name="card-security-code" type="text" maxlength="4" style="width: 60px;" />
 				</div>
 			</div>
 			<!-- card form -->
@@ -143,7 +148,12 @@
 
 {if ($tefsInstallments != false)}
 		<div class="forma-pagamento">
-			<h4>Transferência Bancária</h4>
+			<div class="payment-type-name">
+				<h4>Transferência Bancária</h4>
+				{if $tefsNoDiscount != null}
+					<span>Desconto especial de {$tefsPercent}% + Frete</span>
+				{/if}
+			</div>
 
 			<ul id="tef_list">
 				{foreach from=$tefsInstallments item=tef}
@@ -176,7 +186,12 @@
 
 {if ($bankSlipsInstallments != false)}
 		<div class="forma-pagamento">
-			<h4>Boleto Bancário</h4>
+			<div class="payment-type-name">
+				<h4>Boleto Bancário</h4>
+				{if $bankSlipsNoDiscount != null}
+					<span>Desconto especial de {$bankSlipsPercent}% + Frete</span>
+				{/if}
+			</div>
 
 			<ul id="bankslip_list">
 				{foreach from=$bankSlipsInstallments item=bankSlip}

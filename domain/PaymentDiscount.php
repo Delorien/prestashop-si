@@ -122,7 +122,7 @@ class PaymentDiscount
 		return $simulatedPrice;
 	}
 
-	public function apply($order, $paymentType, $context)
+	public function apply($cart, $paymentType, $context)
 	{
 		$couponId = Configuration::get(self::prefix . self::bcash . $paymentType);
 		$coupon = new CartRule($couponId);
@@ -135,31 +135,19 @@ class PaymentDiscount
 		    'tax_incl' => $tax_incl,
 			'tax_excl' => $tax_excl
 		);
-		$order->addCartRule($coupon->id, $coupon->name[Configuration::get('PS_LANG_DEFAULT')], $values);
-
-		$coupon->checkValidity($context, false, false);
-
-		$order->total_discounts += $tax_incl;
-		$order->total_discounts_tax_incl += $tax_incl;
-		$order->total_discounts_tax_excl += $tax_excl;
-		$order->total_paid -= $tax_incl;
-		$order->total_paid_tax_incl -= $tax_incl;
-		$order->total_paid_tax_excl -= $tax_excl;
-
-		// Update Order
-		$order->update();
+		$cart->addCartRule($coupon->id, $coupon->name[Configuration::get('PS_LANG_DEFAULT')], $values);
 
 		return true;
 	}
 
-	public function getAmountOrderDiscounts($order)
+	public function getAmountOrderDiscounts($cart)
     {
-        $order_discounts = $order->getDiscounts();
+        $order_discounts = $cart->getCartRules();
         $totalDiscouts = (float) 0;
 
         if (count($order_discounts) > 0) {
             foreach ($order_discounts as $discount) {
-                $totalDiscouts += $discount['value'];
+                $totalDiscouts += $discount['value_real'];
             }
         }
 

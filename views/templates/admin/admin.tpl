@@ -48,14 +48,14 @@
 
 		<div class="b-form-group">
 			<label>CPF</label>
-			<label class="label_campo_cpf" for="campo_cpf_def">
+			<label class="label_config_bd" for="campo_cpf_def">
 				{if $campo_cpf eq 'exibir'}
 					<input type="radio" id="campo_cpf_def" name="campo_cpf" checked value="exibir"> <span>Exibir campo no checkout para preenchimento</span>
 				{else}
 					<input type="radio" id="campo_cpf_def" name="campo_cpf" value="exibir"> <span>Exibir campo no checkout para preenchimento</span>
 				{/if}
 			</label>
-			<label class="label_campo_cpf" for="campo_cpf_specified">
+			<label class="label_config_bd" for="campo_cpf_specified">
 				{if $campo_cpf == 'specified'}
 					<input type="radio" id="campo_cpf_specified" name="campo_cpf" checked value="specified"> <span>Especificar campo do CPF</span>
 					<label>(tabela: {$table_cpf}, campo: {$campo_cpf_select}, id_customer: {$where_cpf_select})</label>
@@ -67,13 +67,13 @@
 
 			<div class="b-form-group" id="cpf-spec" style="display: none">
 
-				<div class="table-search">
+				<div class="table-search" id="table-search-cpf">
 					<label>Listar campos da tabela: </label>
 					<input type="text" id="tableAjax" name="tableAjax" style="width: 160px;" />
 					<input type="button" id="tableAjaxButton" value="Buscar" />
 				</div>
 
-				<div class="select-column" style="display: none">
+				<div id="select-column-cpf" class="select-column" style="display: none">
 					<label>Campo com CPF:
 						<select style="height: 35px" name="campo_cpf_select" id="campo_cpf_select" >
 						</select>
@@ -87,6 +87,46 @@
 			</div>
 		</div>
 		
+		<div class="b-form-group">
+			<label>Número do Endereço</label>
+			<label class="label_config_bd" for="campo_numero_endereco_def">
+				{if $campo_numero_endereco eq 'default'}
+					<input type="radio" id="campo_numero_endereco_def" name="campo_numero_endereco" checked value="default"> <span>O número esta junto com o endereço. Ex.: Rua ABCD , 10</span>
+				{else}
+					<input type="radio" id="campo_numero_endereco_def" name="campo_numero_endereco" value="default"> <span>O número de endereço esta junto com o endereço. Ex.: Rua ABCD , 10</span>
+				{/if}
+			</label>
+			<label class="label_config_bd" for="campo_numero_endereco_specified">
+				{if $campo_numero_endereco == 'specified'}
+					<input type="radio" id="campo_numero_endereco_specified" name="campo_numero_endereco" checked value="specified"> <span>Especificar campo do Número</span>
+					<label>(tabela: {$table_numero_endereco}, campo: {$campo_numero_endereco_select}, id_address: {$where_numero_endereco_select})</label>
+				{else}
+					<input type="radio" id="campo_numero_endereco_specified" name="campo_numero_endereco" value="specified"> <span>Especificar campo do Número</span>
+				{/if}
+			</label>
+
+			<div class="b-form-group" id="numero-endereco-spec" style="display: none">
+
+				<div class="table-search" id="table-search-numero-endereco">
+					<label>Listar campos da tabela: </label>
+					<input type="text" id="tableAjaxNumeroEndereco" name="tableAjaxNumeroEndereco" style="width: 160px;" />
+					<input type="button" id="tableAjaxButtonNumeroEndereco" value="Buscar" />
+				</div>
+
+				<div id="select-column-numero-endereco" class="select-column" style="display: none">
+					<label>Campo com o número do endereço:
+						<select style="height: 35px" name="campo_numero_endereco_select" id="campo_numero_endereco_select" >
+						</select>
+					</label>
+					<label>
+						Campo com id_address:
+						<select style="height: 35px" name="where_numero_endereco_select" id="where_numero_endereco_select" >
+						</select>
+					</label>
+				</div>
+			</div>
+		</div>
+
 		<div class="b-form-group">
 			<label for="directPayment">
 				{if $directPayment == 1}
@@ -133,11 +173,40 @@
 				$("#where_cpf_select").append('<option value=' + element + '>' + element + '</option>');
 			});
 
-			$(".select-column").show('slow');
+			$("#select-column-cpf").show('slow');
 		  },
 		  error: function (xhr, ajaxOptions, thrownError) {
-		  		$(".select-column").hide('slow');
+		  		$("#select-column-cpf").hide('slow');
 				alert('Não foi possível carregar os campos da tabela ' + $("#tableAjax").val() + '. Por favor verifieque o nome da tabela.')
+	      }
+		});
+	});
+	$("#tableAjaxButtonNumeroEndereco").click(function($table)
+	{
+		$.ajax({
+		  type: 'POST',
+		  url: '{$ajax_dir}',
+		  data: 'table=' + $("#tableAjaxNumeroEndereco").val(),
+		  dataType: 'json',
+		  success: function(json) {
+
+			$('#campo_numero_endereco_select').find('option').remove()
+
+			$(json).each(function(index, element) {
+				$("#campo_numero_endereco_select").append('<option value=' + element + '>' + element + '</option>');
+			});
+
+			$('#where_numero_endereco_select').find('option').remove()
+
+			$(json).each(function(index, element) {
+				$("#where_numero_endereco_select").append('<option value=' + element + '>' + element + '</option>');
+			});
+
+			$("#select-column-numero-endereco").show('slow');
+		  },
+		  error: function (xhr, ajaxOptions, thrownError) {
+		  		$("#select-column-numero-endereco").hide('slow');
+				alert('Não foi possível carregar os campos da tabela ' + $("#tableAjaxNumeroEndereco").val() + '. Por favor verifieque o nome da tabela.')
 	      }
 		});
 	});

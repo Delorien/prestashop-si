@@ -53,14 +53,17 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			            'cardsInstallments' => $cardsInstallments,
 			            'cardsAmount' => $cardsAmounts['price'],
 			            'cardsNoDiscount' => $cardsAmounts['nodiscount'],
+			            'cardsPercent' => $cardsAmounts['percentdiscount'],
 
 			            'tefsInstallments' => $TEFsInstallments,
 			            'tefsAmount' => $TEFsAmounts['price'],
 			            'tefsNoDiscount' => $TEFsAmounts['nodiscount'],
+			            'tefsPercent' => $TEFsAmounts['percentdiscount'],
 
 			            'bankSlipsInstallments' => $bankSlipsInstallments,
 			            'bankSlipsAmount' => $bankSlipsAmounts['price'],
 			            'bankSlipsNoDiscount' => $bankSlipsAmounts['nodiscount'],
+			            'bankSlipsPercent' => $bankSlipsAmounts['percentdiscount'],
 
 			            'mesesVencimento' => $this->getMonths(),
 			            'anosVencimento' => $this->getYears(),
@@ -120,13 +123,14 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	private function getAmounts($paymentOption, $paymentType)
 	{
 		$price = FormatHelper::monetize($paymentOption[0]->installments[0]->amount);
-		$amounts = array('nodiscount' => null, 'price' => $price);
+		$amounts = array('nodiscount' => null, 'price' => $price, 'percentdiscount' => null);
 
 		$discount = Configuration::get(self::prefix . $paymentType);
 
 		if (!empty($discount)) {
 			$amounts['nodiscount'] = $price;
 			$amounts['price'] = $this->applyDiscount($paymentType);
+			$amounts['percentdiscount'] = $discount;
 		}
 
 		return $amounts;

@@ -174,7 +174,6 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	private function createAddress()
 	{
 		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
-
 	    $address = new Bcash\Domain\Address();
 	    $address->setAddress($deliveryAddress->address1);
 	    $address->setNeighborhood($deliveryAddress->address2);

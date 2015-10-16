@@ -29,6 +29,11 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	 */
 	public function postProcess()
 	{
+		$cartSize = $this->context->cart->nbProducts();
+		if (empty($cartSize)) {
+			Tools::redirect('index.php?controller=order&step=1');
+		}
+
 		$payment = new Payment(Configuration::get(self::prefix.'CONSUMER_KEY'));
 		$payment->enableSandBox(Configuration::get(self::prefix.'SANDBOX'));
 
@@ -85,12 +90,12 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 	    $transactionRequest = new Bcash\Domain\TransactionRequest();
 
 	    $transactionRequest->setSellerMail(Configuration::get(self::prefix.'EMAIL'));
+	    $transactionRequest->setDiscount($this->calculateDiscounts());
 	    $transactionRequest->setOrderId($this->createOrder());
 	    $transactionRequest->setBuyer($this->createBuyer());
 		$shoppingCost = $this->context->cart->getTotalShippingCost();
 		$shoppingCost = FormatHelper::monetize($shoppingCost);
 	    $transactionRequest->setShipping($shoppingCost);
-	    $transactionRequest->setDiscount($this->calculateDiscounts());
 	    $transactionRequest->setUrlNotification($this->context->link->getModuleLink('bcash', 'notification', array(), true));
 	    $transactionRequest->setProducts($this->createProducts());
 	    $transactionRequest->setAcceptedContract("S");
@@ -176,14 +181,31 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
 	    $address = new Bcash\Domain\Address();
 	    $address->setAddress($deliveryAddress->address1);
+		$address->setNumber($this->getNumber());
 	    $address->setNeighborhood($deliveryAddress->address2);
 	    $address->setCity($deliveryAddress->city);
 	    $address->setZipCode($deliveryAddress->postcode);
-
 		$state = new State((int) $deliveryAddress->id_state);
 		$address->setState(BcashStateHelper::getStateAbbreviation( $state->name ));
 
 	    return $address;
+	}
+
+	private function getNumber() 
+	{
+		$campoNumero = Configuration::get(self::prefix . 'CAMPO_NUMERO_ENDERECO');
+
+		if ( !empty($campoNumero) && $campoNumero == 'specified' ) {
+			$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_NUMERO_ENDERECO');
+			$coluna = Configuration::get(self::prefix.'CAMPO_NUMERO_ENDERECO_SELECT');
+			$where = Configuration::get(self::prefix.'WHERE_NUMERO_ENDERECO');
+
+			$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
+					' WHERE ' . $where . ' = ' . (int) $this->context->cart->id_address_delivery;
+
+			$result = Db::getInstance()->getValue($sql);
+			return $result;
+		}
 	}
 
 	private function createProducts()
@@ -210,18 +232,17 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 		$paymentMethodHelper = new PaymentMethodHelper();
 		$payment_method = $paymentMethodHelper->getById(Tools::getValue('payment-method'));
-		$order = new Order($this->module->currentOrder);
+		$cart = $this->context->cart;
 
 		if (PaymentMethodHelper::isCard($payment_method) && (Tools::getValue('card-installment') == 1)) {
-			$paymentDiscount->apply($order, 'DESCONTO_CREDITO', $this->context);
+			$paymentDiscount->apply($cart, 'DESCONTO_CREDITO', $this->context);
 		} else if (PaymentMethodHelper::isTEF($payment_method)) {
-			$paymentDiscount->apply($order, 'DESCONTO_TEF', $this->context);
+			$paymentDiscount->apply($cart, 'DESCONTO_TEF', $this->context);
 		} else if (PaymentMethodHelper::isBankSlip($payment_method)){
-			$paymentDiscount->apply($order, 'DESCONTO_BOLETO', $this->context);
+			$paymentDiscount->apply($cart, 'DESCONTO_BOLETO', $this->context);
 		}
 
-		$totalDiscouts = $paymentDiscount->getAmountOrderDiscounts($order);
-
+		$totalDiscouts = $paymentDiscount->getAmountOrderDiscounts($cart);
 		return $totalDiscouts;
 	}
 
@@ -253,7 +274,7 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 		    'b_errors' => $e->getErrors()->list, 
 		);
 
-		$url = $this->context->link->getModuleLink('bcash', 'payment', $params, array(), true);
+		$url = $this->context->link->getModuleLink('bcash', 'payment', $params, true);
 
 		Tools::redirectLink($url);
 	}

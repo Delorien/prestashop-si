@@ -69,13 +69,13 @@
   font-size: 15px;
 }
 
-#bcash .label_campo_cpf span {
+#bcash .label_config_bd span {
 	font-size: 15px;
 	font-weight: normal;
 	vertical-align: middle;
 }
 
-#bcash .label_campo_cpf input[type="radio"] {
+#bcash .label_config_bd input[type="radio"] {
 	vertical-align: middle;
 }
 

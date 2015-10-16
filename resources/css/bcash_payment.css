@@ -255,10 +255,18 @@
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 }
 
-#bcash form input[type="text"], #bcash form select, #bcash form textarea {
+#bcash form input[type="text"], input[type="number"], #bcash form select, #bcash form textarea {
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	padding: 5px;
+}
+
+#bcash input[type=number]::-webkit-inner-spin-button,
+#bcash input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 
 #bcash .b-form-horizontal .b-form-group {
@@ -409,4 +417,25 @@
 	z-index: 9998;
 	background-color: rgba(0, 0, 0, 0.2);
 	display: none;
+}
+
+.payment-type-name h4 {
+	display: inline;
+}
+
+.payment-type-name span {
+	margin-left: 8px;
+    display: inline-block;
+    color: #4f882d;
+    font-weight: 600;	
+}
+
+.firenumber::-webkit-outer-spin-button,
+.firenumber::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.firenumber {
+    -moz-appearance:textfield;
 }

@@ -20,6 +20,16 @@ $(document).ready(function() {
 
 	}, "Selecione a tabela e o campo para usar como cpf.");
 
+	jQuery.validator.addMethod("isTableLoadNumeroEndereco", function(value, element) {
+
+		if(	($('#tableAjaxNumeroEndereco').val() != '') &&
+			($('#campo_numero_endereco_select').val() == null)	) {
+			return false;
+		}
+		return true;
+
+	}, "Selecione a tabela e o campo para usar como número de endereço.");
+
 	$("#adminform").validate({
 		ignoreTitle: true,
 		rules : {
@@ -53,6 +63,16 @@ $(document).ready(function() {
 			tableAjax : {
 				required : true,
 				isTableLoad : true
+			},
+			campo_numero_endereco : {
+				required : true
+			},
+			campo_numero_endereco_select : {
+				required : true
+			},
+			tableAjaxNumeroEndereco : {
+				required : true,
+				isTableLoadNumeroEndereco : true
 			}
 		},
 		messages : {
@@ -74,11 +94,27 @@ $(document).ready(function() {
 			},
 			tableAjax : {
 				required : "Selecione a tabela e o campo para usar como cpf."
+			},
+			campo_numero_endereco : {
+				required : "Selecione como o módulo deve tratar o número dos endereços."
+			},
+			campo_numero_endereco_select : {
+				required : "Selecione a tabela e o campo para usar como número de endereço."
+			},
+			tableAjaxNumeroEndereco : {
+				required : "Selecione a tabela e o campo para usar como número de endereço."
 			}
 		},
 		errorPlacement: function(error, element) {
 		    if (element.attr("name") == "tableAjax" ) {
-		    	error.insertAfter(".table-search");
+		    	error.insertAfter("#table-search-cpf");
+	       } else {
+	       	error.insertAfter(element);
+	      }
+		},
+		errorPlacement: function(error, element) {
+		    if (element.attr("name") == "tableAjaxNumeroEndereco" ) {
+		    	error.insertAfter("#table-search-numero-endereco");
 	       } else {
 	       	error.insertAfter(element);
 	      }
@@ -138,6 +174,20 @@ $(document).ready(function() {
 			$(".select-column").hide('slow');
 			$('#campo_cpf_select').find('option').remove()
 			$('#where_cpf_select').find('option').remove()
+		}
+	});
+
+	$('input[name=campo_numero_endereco]').change(function(){
+	    var value = $( this ).val();
+
+		if (value == 'specified') {
+			$('#numero-endereco-spec').show('slow');
+		} else {
+			$('#tableAjaxNumeroEndereco').val('');
+			$('#numero-endereco-spec').hide('slow');
+			$(".select-column-numero-endereco").hide('slow');
+			$('#campo_numero_endereco_select').find('option').remove()
+			$('#where_numero_endereco_select').find('option').remove()
 		}
 	});
 

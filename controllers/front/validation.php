@@ -177,7 +177,6 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 	    $address = new Bcash\Domain\Address();
 	    $address->setAddress($deliveryAddress->address1);
-		$address->setNumber($deliveryAddress->number);
 	    $address->setNeighborhood($deliveryAddress->address2);
 	    $address->setCity($deliveryAddress->city);
 	    $address->setZipCode($deliveryAddress->postcode);

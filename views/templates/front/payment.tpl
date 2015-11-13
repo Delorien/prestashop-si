@@ -19,13 +19,20 @@
 
 	<form id="b-form-checkout" action="{$action_post|escape:'html'}" method="post">
 
-		{if $campo_cpf == 'exibir'}
+		{if $askDocument == 'exibir'}
 			<h3>Seus Dados</h3>
 			<div class="forma-pagamento b-form-horizontal">
 
+			{if $isCNPJ}
+				<div class="b-form-group">
+					<label style="margin-right: 10px">Nome</label>
+					<input id="consumer_name" name="consumer_name" type="text" placeholder="Nome"/>
+				</div>
+			{/if}
+
 				<div class="b-form-group">
 					<label style="margin-right: 10px">CPF</label>
-					<input name="bcash_cpf" type="text" placeholder="CPF"/>
+					<input id="bcash_cpf" name="bcash_cpf" type="text" placeholder="CPF"/>
 				</div>
 			</div>
 		{/if}

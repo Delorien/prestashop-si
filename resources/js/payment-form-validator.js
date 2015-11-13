@@ -16,12 +16,27 @@ $(document).ready(function() {
 		return true;
 	}, "Tamanho do CVV inválido.");
 
+	jQuery.validator.addMethod("isCPFCorrectSize", function(value, element) {
+
+		var mandatorySize = 11;
+
+		if (value.length != mandatorySize) {
+			return false;
+		}
+
+		return true;
+	}, "Tamanho do CPF inválido.");
+
 	$("#b-form-checkout").validate({
 		ignoreTitle: true,
 		ignore: ":hidden",
 		rules : {
-			bcash_cpf : {
+			consumer_name : {
 				required : true
+			},
+			bcash_cpf : {
+				required : true,
+				isCPFCorrectSize : true
 			},
 			'card-number' : {
 				required : true
@@ -44,6 +59,9 @@ $(document).ready(function() {
 			}
 		},
 		messages : {
+			consumer_name : {
+				required : "Campo nome obrigatório."
+			},
 			bcash_cpf : {
 				required : "Campo cpf obrigatório."
 			},

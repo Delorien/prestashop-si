@@ -86,7 +86,7 @@ $(document).ready(function() {
 	};
 
 
-	$('#card-number').keydown(function(evt){
+	$('#card-number, #bcash_cpf').keydown(function(evt){
 		if ((evt.keyCode>47&&evt.keyCode<58&&evt.shiftKey===false)||(evt.keyCode>95&&evt.keyCode<106)){
 			return true;
 		}else{
@@ -110,7 +110,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#card-owner-name').keydown(function(evt){
+	$('#card-owner-name, #consumer_name').keydown(function(evt){
 		if(evt.keyCode===0||(evt.keyCode>64&&evt.keyCode<91)){
 			return true;
 		}else{

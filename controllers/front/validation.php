@@ -276,7 +276,8 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 	private function cancelOrder() {
 		$order_id = (int) $this->module->currentOrder;
-		$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));
+		//$order_state_id = (int)(Configuration::get('PS_OS_BCASH_CANCELLED'));
+		$order_state_id = 6;
 
 		$history = new OrderHistory();
 		$history->id_order = $order_id;

@@ -4,6 +4,7 @@ include_once dirname(__FILE__).'/../../bcash-php-sdk/autoloader.php';
 include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
 include_once dirname(__FILE__).'/../../helper/FormatHelper.php';
 include_once dirname(__FILE__).'/../../domain/PaymentDiscount.php';
+include_once dirname(__FILE__).'/../../domain/Document.php';
 
 use Bcash\Service\Installments;
 use Bcash\Exception\ValidationException;
@@ -49,6 +50,8 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 				$bankSlipsAmounts = $this->getAmounts($bankSlipsInstallments, 'DESCONTO_BOLETO');
 			}
 
+			$document = new Document($this->context->customer);
+
 			$data = array(
 			            'cardsInstallments' => $cardsInstallments,
 			            'cardsAmount' => $cardsAmounts['price'],
@@ -68,7 +71,8 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 			            'mesesVencimento' => $this->getMonths(),
 			            'anosVencimento' => $this->getYears(),
 
-						'campo_cpf' => $this->getCpfMode(),
+						'askDocument' => $document->getMode(),
+						'isCNPJ' => $document->isCNPJ(),
 						'action_post' => $this->context->link->getModuleLink('bcash', 'validation', array(), true)
 					);
 
@@ -96,29 +100,6 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
     	}
 
   	}
-
-	private function getCpfMode()
-	{
-		$campoCPF = Configuration::get(self::prefix . 'CAMPO_CPF');
-
-		if ( ($campoCPF != 'exibir') && ($this->isCpfOnBase()) ) {
-			return 'specified';
-		}
-
-		return 'exibir';
-	}
-
-	private function isCpfOnBase() 
-	{
-		$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_CPF');
-		$coluna = Configuration::get(self::prefix.'CAMPO_CPF_SELECT');
-		$where = Configuration::get(self::prefix.'WHERE_CPF');
-
-		$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
-				' WHERE ' . $where . ' = ' . $this->context->customer->id;
-		$result = Db::getInstance()->getValue($sql);
-		return $result;
-	}
 
 	private function getAmounts($paymentOption, $paymentType)
 	{

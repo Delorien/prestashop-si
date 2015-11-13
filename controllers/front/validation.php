@@ -2,6 +2,7 @@
 
 include_once dirname(__FILE__).'/../../domain/History.php';
 include_once dirname(__FILE__).'/../../domain/PaymentDiscount.php';
+include_once dirname(__FILE__).'/../../domain/Document.php';
 include_once dirname(__FILE__).'/../../helper/PaymentMethodHelper.php';
 include_once dirname(__FILE__).'/../../helper/FormatHelper.php';
 include dirname(__FILE__).'/../../helper/BcashStateHelper.php';
@@ -130,33 +131,44 @@ class BcashValidationModuleFrontController extends ModuleFrontController
 
 	    $customer = new Bcash\Domain\Customer();
 	    $customer->setMail($buyer->email);
-	    $customer->setName($buyer->firstname . ' ' . $buyer->lastname);
-	    $customer->setCpf($this->getCPF());
-		$customer->setPhone($this->getTel());
+	    $customer->setPhone($this->getTel());
 		$address = $this->createAddress();
 	    $customer->setAddress($address);
+
+		if($this->isCompany()) {
+	    	$customer->setCpf(Tools::getValue('bcash_cpf'));
+			$customer->setName(Tools::getValue('consumer_name'));
+			$document = new Document($this->context->customer);
+			$customer->setCnpj($document->find());
+			$customer->setCompanyName($buyer->firstname . ' ' . $buyer->lastname);
+		} else {
+			$customer->setName($buyer->firstname . ' ' . $buyer->lastname);
+	    	$customer->setCpf($this->getCPF());
+		}
 
 	    return $customer;
 	}
 
-	private function getCPF() 
+
+	private function isCompany()
+	{
+		if ( Tools::getValue('bcash_cpf') && Tools::getValue('consumer_name') ) {
+			return true;
+		}
+		return false;
+	}
+
+	private function getCPF()
 	{
 		if ( Tools::getValue('bcash_cpf') ) {
 			return Tools::getValue('bcash_cpf');
 		}else {
-			$tabela = _DB_PREFIX_ . Configuration::get(self::prefix.'TABLE_CPF');
-			$coluna = Configuration::get(self::prefix.'CAMPO_CPF_SELECT');
-			$where = Configuration::get(self::prefix.'WHERE_CPF');
-
-			$sql = 'SELECT ' . $coluna . ' FROM ' . $tabela . 
-					' WHERE ' . $where . ' = ' . $this->context->customer->id;
-
-			$result = Db::getInstance()->getValue($sql);
-			return $result;
+			$document = new Document($this->context->customer);
+			return $document->find();
 		}
 	}
 
-	private function getTel() 
+	private function getTel()
 	{
 		$deliveryAddress = new Address((int) $this->context->cart->id_address_delivery);
 

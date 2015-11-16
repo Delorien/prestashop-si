@@ -18,6 +18,15 @@ class BcashPaymentModuleFrontController extends ModuleFrontController
 	private $tentativas = 0; 
 
 	/**
+	 * Initialize the page
+	 */
+	public function init()
+	{
+		$this->ssl = true;
+		parent::init();
+	}
+
+	/**
 	 * @see FrontController::initContent()
 	 */
 	public function initContent()

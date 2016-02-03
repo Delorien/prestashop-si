@@ -61,7 +61,7 @@ class BcashNotificationModuleFrontController extends ModuleFrontController
 
 	private function updateStatus($orderId, $statusId)
 	{
-		if ($statusId == 6 || $statusId == 7) {
+		if ($statusId == 7) {
 			$order_state_id = 6;
 		} else {
 			$order_state_id = $this->getStatus($statusId);
